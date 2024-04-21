@@ -3,6 +3,43 @@
 const { Property, validateProperty } = require("../models/property");
 const Joi = require("joi");
 
+const fs = require('fs');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+
+exports.createProperty = async (req, res) => {
+  // Validate property input
+  const { error } = validateProperty(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
+  try {
+    const property = new Property(req.body);
+
+    // Handle file uploads
+    const uploadsDir = path.join(__dirname, '..', 'uploads');
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir);
+    }
+
+    if (req.files && req.files.length > 0) {
+      property.files = [];
+      req.files.forEach(file => {
+        const filename = uuidv4() + path.extname(file.originalname);
+        const filePath = path.join(uploadsDir, filename);
+        fs.writeFileSync(filePath, file.buffer);
+        property.files.push(filename);
+      });
+    }
+
+    await property.save();
+    res.status(201).json(property);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 //Get All product
 class APIfeatures {
   constructor(query, queryString) {
@@ -80,22 +117,6 @@ exports.getAllProperties = async (req, res) => {
   }
 };
 
-// Create a new property
-exports.createProperty = async (req, res) => {
-  // Validate property input
-  const { error } = validateProperty(req.body);
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
-
-  try {
-    const property = new Property(req.body);
-    await property.save();
-    res.status(201).json(property);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
 // Get property by ID
 exports.getPropertyById = async (req, res) => {
