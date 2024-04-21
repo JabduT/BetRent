@@ -40,6 +40,7 @@ const propertySchema = new mongoose.Schema(
       minlength: 10,
       maxlength: 2000,
     },
+    propertySize: { type: Number },
     roomNumber: { type: Number },
     bedRoomNum: { type: Number },
     address: {
@@ -92,6 +93,7 @@ function validateProperty(property) {
     userId: Joi.string().required(),
     files: Joi.array().items(Joi.string()).required(),
     price: Joi.number().min(0).required(),
+    propertySize: Joi.number().min(0).required(),
   });
   return schema.validate(property);
 }
