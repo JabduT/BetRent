@@ -3,6 +3,7 @@ import 'package:owner_app/screens/screen1.dart';
 import 'package:owner_app/screens/screen2.dart';
 import 'package:owner_app/screens/screen3.dart';
 import 'package:owner_app/screens/screen4.dart';
+import 'package:owner_app/screens/authentication/login.dart'; // Import the login screen
 
 void main() {
   runApp(MyApp());
@@ -22,8 +23,8 @@ const MyApp({super.key});
       ),
     initialRoute: '/',
       routes: {
-        '/': (context) => MyBottomNavigationBar(),
-        '/screen1': (context) => Screen1(),
+      '/': (context) => LoginScreen(),
+        '/screen1': (context) => HomeScreen(),
         '/screen2': (context) => Screen2(),
         '/screen3': (context) => Screen3(),
         '/screen4': (context) => Screen4(),
