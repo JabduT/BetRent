@@ -15,6 +15,13 @@ const {
   deleteProperty,
 } = require("../controllers/propertyController");
 const authenticate = require("../middleware/authentication");
+const {
+  getAllFavorites,
+  getFavoriteById,
+  createFavorite,
+  updateFavorite,
+  deleteFavorite,
+} = require("../controllers/favoriteController");
 const router = express.Router();
 
 //LOGIN
@@ -36,5 +43,13 @@ router.get("/properties/:id", authenticate, getPropertyById);
 router.post("/properties", createProperty);
 router.put("/properties/:id", updateProperty);
 router.delete("/properties/:id", deleteProperty);
+
+// favorites
+router.get("/favorites", getAllFavorites);
+router.get("/favorites/:id", authenticate, getFavoriteById);
+
+router.post("/favorites", createFavorite);
+router.put("/favorites/:id", updateFavorite);
+router.delete("/favorites/:id", deleteFavorite);
 
 module.exports = router;
