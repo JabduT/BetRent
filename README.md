@@ -20,7 +20,7 @@ The backend server is built using express nodejs,mongodb and socketio, providing
 - Secure authentication mechanisms using tokens.
 - Scalable architecture to handle concurrent user requests.
 
-## Mobile_app
+## MobileApp
 
 The mobile_app  includes the following key features and screens:
 
