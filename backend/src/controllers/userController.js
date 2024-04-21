@@ -24,9 +24,13 @@ exports.createUser = async (req, res) => {
 // login
 exports.Login = async (req, res) => {
   try {
-    const { phoneNumber, PIN } = req.body;
-console.log(PIN);
-    const user = await User.findOne({ PIN });
+  const { phoneNumber, PIN } = req.body;
+const user=await User.findOne({phoneNumber})
+  const isMatch=await user.checkPIN(PIN, user.PIN)
+  console.log(isMatch);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'In correct PIN' });
+    }
     if (!user) {
       return res.status(400).json({ message: "Invalid phone number or PIN" });
     }

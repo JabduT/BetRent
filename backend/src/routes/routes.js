@@ -29,7 +29,7 @@ const router = express.Router();
 router.post("/login", Login);
 router.post('/users/create',createUser);
 //view
-router.get("/users", authenticate, getAllUsers);
+router.get("/users", getAllUsers);
 router.get("/users/:id", getUserById);
 router.route("users/profile").get(getMe,getUserById).put(getMe,updateUser);
 router.put("/users/:id", updateUser);
@@ -39,6 +39,8 @@ router.delete("/users/:id", deleteUser);
 //view
 router.get("/properties", getAllProperties);
 router.get("/properties/:id", authenticate, getPropertyById);
+//router.get("/properties/:id", authenticate, getPropertyById);
+
 router.post("/properties", createProperty);
 router.put("/properties/:id", updateProperty);
 router.delete("/properties/:id", deleteProperty);
