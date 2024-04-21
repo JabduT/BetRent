@@ -13,23 +13,49 @@ exports.createUser = async (req, res) => {
 
 // login
 exports.Login = async (req, res) => {
+exports.Login = async (req, res) => {
   try {
   const { phoneNumber, PIN } = req.body;
-const user=await User.findOne({phoneNumber})
-  const isMatch=await user.checkPIN(PIN, user.PIN)
-  console.log(isMatch);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'In correct PIN' });
-    }
+
+    const user = await User.findOne({ PIN });
     if (!user) {
       return res.status(400).json({ message: "Invalid phone number or PIN" });
     }
-    // Authentication logic (createSendToken function) goes here
-    authentication.createSendToken(user,200,res);
-    
+  createSendToken(user, 200, res);
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+};
+// protect controller for authorization
+export const protect = async (req, res, next) => {
+  let token;
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
+
+  try {
+    if (!token) {
+      throw new Error('You are not logged in! Please log in to get access.');
+    }
+    const decoded = await new Promise((resolve, reject) => {
+      jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decode) => {
+        if (err) reject(err);
+        else resolve(decoded);
+      });
+    });
+
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      throw new Error('No user belongs to this token');
+    }
+
+    req.user = currentUser;
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: error.message });
   }
 };
 // Get all users
@@ -39,18 +65,8 @@ exports.getAllUsers = async (req, res) => {
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
-};// Create a new user
-exports.createUser = async (req, res) => {
-  // Validate user input
-  const { error } = validateUser(req.body);
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
+  }};
 
-exports.getMe =async (req, res, next) => {
-  req.params.userId = req.user.id;
-  next();
 };
 // Get user by ID
 exports.getUserById = async (req, res) => {
