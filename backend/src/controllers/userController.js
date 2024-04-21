@@ -1,5 +1,12 @@
 const { User, validateUser } = require("../models/user");
-const Joi = require("joi");
+const Joi = require("joi");const authentication=require("../middleware/authentication");
+// create new user controller
+exports.createUser = async (req, res) => {
+  // Validate user input
+  const { error } = validateUser(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
 
 // controllers/authController.js
 
@@ -14,6 +21,7 @@ exports.createUser = async (req, res) => {
     return res.status(400).json({ message: error.details[0].message });
   }
 
+// login
 exports.Login = async (req, res) => {
   try {
   const { phoneNumber, PIN } = req.body;
