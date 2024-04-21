@@ -13,6 +13,7 @@ const MyApp({super.key});
       theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        primarySwatch: Colors.red,
       ),
     home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
