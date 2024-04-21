@@ -44,9 +44,6 @@ userSchema.pre("save", async function (next) {
     next(error);
   }
 });
-// method to compare PIN
-userSchema.methods.comparePIN = async function (candidatePIN) {
-  return await bcrypt.compare(candidatePIN, this.PIN);
 // Define instance method to compare PIN
 userSchema.methods.checkPIN = async function (
   candidatePIN,
