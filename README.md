@@ -22,7 +22,7 @@ The backend server is built using express nodejs,mongodb and socketio, providing
 
 ## MobileApp
 
-The mobile_app  includes the following key features and screens:
+The mobileApp  includes the following key features and screens:
 
 - **Authentication:** Login and registration screens for owners and renters.
 - **Dashboard:** Overview of user activities, property listings, and communication channels.
