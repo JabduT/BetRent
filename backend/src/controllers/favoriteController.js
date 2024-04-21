@@ -1,6 +1,6 @@
 const { Favorite } = require('../models/Favorite');
 const { User } = require('../models/User');
-const { Property } = require('../models/property');
+const { Property } = require('../models/Property');
 
 // Create a new favorite
 exports.createFavorite = async (req, res) => {
