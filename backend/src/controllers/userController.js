@@ -40,8 +40,7 @@ exports.getAllUsers = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
-// Create a new user
+};// Create a new user
 exports.createUser = async (req, res) => {
   // Validate user input
   const { error } = validateUser(req.body);
@@ -49,16 +48,10 @@ exports.createUser = async (req, res) => {
     return res.status(400).json({ message: error.details[0].message });
   }
 
-  try {
-    const user = new User(req.body);
-    await user.save();
-
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+exports.getMe =async (req, res, next) => {
+  req.params.userId = req.user.id;
+  next();
 };
-
 // Get user by ID
 exports.getUserById = async (req, res) => {
   try {
