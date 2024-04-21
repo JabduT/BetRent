@@ -15,11 +15,7 @@ app.use(bodyParser.json());
 require("./src/config/db");
 // Routes
 app.use("/api", router);
-app.use((req, res, next) => {
-  console.log('Incoming request:', req.method, req.url);
-  console.log('Request body:', req.body);
-  next();
-});
+
 
 // Set port
 const PORT = process.env.PORT || 5000;

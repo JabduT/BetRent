@@ -1,9 +1,8 @@
 ###
 POST http://127.0.0.1:5000/api/properties
-
 Content-Type: application/json
 {
-"title":"emm@gmaa.com", 
+"email":"emm@gmaa.com", 
 "password":"khjkasdsa",
 
 }

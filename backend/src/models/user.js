@@ -1,15 +1,9 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
-    //   username: {
-    //     type: String,
-    //     required: true,
-    //     minlength: 3,
-    //     maxlength: 50
-    //   },
-
     phoneNumber: {
       type: String,
       required: true,
@@ -25,12 +19,9 @@ const userSchema = new mongoose.Schema(
       },
     },
     PIN: {
-      type: Number,
+      type: String, 
       required: true,
-      min: 1000,
-      max: 999999,
     },
-
     role: {
       type: String,
       enum: ["renter", "landlord"],
@@ -40,13 +31,26 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Hash the PIN before saving the user
+userSchema.pre("save", async function (next) {
+  // Only hash the PIN if it's modified or is new
+  if (!this.isModified("PIN")) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.PIN = await bcrypt.hash(this.PIN, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 const User = mongoose.model("User", userSchema);
 
 function validateUser(user) {
   const schema = Joi.object({
-    // username: Joi.string().min(3).max(50).required(),
     email: Joi.string().min(5).max(255).email(),
-    PIN: Joi.number().integer().required().min(1000).max(999999),
+    PIN: Joi.string().min(4).max(6).required(),
     role: Joi.string().valid("renter", "landlord").default("renter"),
     phoneNumber: Joi.string()
       .min(10)

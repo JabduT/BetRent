@@ -5,6 +5,7 @@ const {
   createUser,
   updateUser,
   deleteUser,
+  Login,
 } = require("../controllers/userController");
 const {
   getAllProperties,
@@ -13,7 +14,11 @@ const {
   updateProperty,
   deleteProperty,
 } = require("../controllers/propertyController");
+const authenticate = require("../middleware/authentication");
 const router = express.Router();
+
+//LOGIN
+router.post("/login", Login);
 
 //view
 router.get("/users", getAllUsers);
@@ -26,7 +31,7 @@ router.delete("/users/:id", deleteUser);
 //property || house
 //view
 router.get("/properties", getAllProperties);
-router.get("/properties/:id", getPropertyById);
+router.get("/properties/:id", authenticate, getPropertyById);
 
 router.post("/properties", createProperty);
 router.put("/properties/:id", updateProperty);
