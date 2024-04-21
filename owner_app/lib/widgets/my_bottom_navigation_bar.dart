@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:owner_app/screens/screen1.dart';
 import 'package:owner_app/screens/screen2.dart';
 import 'package:owner_app/screens/screen3.dart';
@@ -30,22 +31,14 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         title: Text('Screen ${_selectedIndex + 1}'),
       ),
       body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.looks_one),
-            label: '1',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.looks_two),
-            label: '2',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.looks_3),
-            label: '3',
-          ),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.blue, // Change as needed
+        items: <Widget>[
+          Icon(Icons.looks_one, size: 30),
+          Icon(Icons.looks_two, size: 30),
+          Icon(Icons.looks_3, size: 30),
         ],
-        currentIndex: _selectedIndex,
+        index: _selectedIndex,
         onTap: _onItemTapped,
       ),
     );
