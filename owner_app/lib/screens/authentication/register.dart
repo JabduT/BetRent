@@ -204,7 +204,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               child: const Text(
-                'SignUp',
+                'Sign Up',
                 style: TextStyle(
                   height: 3.5,
                   fontWeight: FontWeight.bold, // Bold font weight
