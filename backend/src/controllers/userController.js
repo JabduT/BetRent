@@ -1,7 +1,7 @@
-const { User, validateUser } = require("../models/user");
-const Joi = require("joi");
-const bcrypt = require("bcrypt");
+// controllers/userController.js
 
+const { User, validateUser } = require("../models/User");
+const Joi = require("joi");
 const authentication=require("../middleware/authentication");
 // create new user controller
 exports.createUser = async (req, res) => {
@@ -10,52 +10,23 @@ exports.createUser = async (req, res) => {
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
-
 // login
 exports.Login = async (req, res) => {
-exports.Login = async (req, res) => {
-  try {
-  const { phoneNumber, PIN } = req.body;
+  try {const { phoneNumber, PIN } = req.body;
+    // Validate user input
+    const { error } = validateUser(req.body);
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
 
-    const user = await User.findOne({ PIN });
+    // Find user by phone number
+    const user = await User.findOne({ phoneNumber });
     if (!user) {
       return res.status(400).json({ message: "Invalid phone number or PIN" });
     }
-  createSendToken(user, 200, res);
+    authentication.createSendToken(user, 200, res);
   } catch (error) {
-    console.error('Error logging in:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-// protect controller for authorization
-export const protect = async (req, res, next) => {
-  let token;
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
-  } else if (req.cookies.jwt) {
-    token = req.cookies.jwt;
-  }
-
-  try {
-    if (!token) {
-      throw new Error('You are not logged in! Please log in to get access.');
-    }
-    const decoded = await new Promise((resolve, reject) => {
-      jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decode) => {
-        if (err) reject(err);
-        else resolve(decoded);
-      });
-    });
-
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
-      throw new Error('No user belongs to this token');
-    }
-
-    req.user = currentUser;
-    next();
-  } catch (error) {
-    return res.status(401).json({ error: error.message });
+  console.error("Login error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 // Get all users
@@ -67,7 +38,43 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).json({ message: error.message });
   }};
 
+  try {
+    const user = new User(req.body);
+    await user.save();
+    authentication.createSendToken(user,201,res);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
 };
+
+// login
+exports.Login = async (req, res) => {
+exports.Login = async (req, res) => {
+  try {
+  const { phoneNumber, PIN } = req.body;
+
+    const user = await User.findOne({ PIN });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid phone number or PIN" });
+    }
+    authentication.createSendToken(user, 200, res);
+  } catch (error) {
+  console.error('Error logging in:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+// Get all users
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+}
+};
+
 // Get user by ID
 exports.getUserById = async (req, res) => {
   try {
