@@ -52,7 +52,10 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-
+exports.getMe =async (req, res, next) => {
+  req.params.userId = req.user.id;
+  next();
+};
 // Get user by ID
 exports.getUserById = async (req, res) => {
   try {
