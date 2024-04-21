@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:owner_app/screens/screen1.dart';
 import 'package:owner_app/screens/screen2.dart';
 import 'package:owner_app/screens/screen3.dart';
-import 'package:owner_app/screens/screen4.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
   @override
@@ -14,10 +12,9 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    HomeScreen(),
+    Screen1(),
     Screen2(),
     Screen3(),
-    Screen4(),
   ];
 
   void _onItemTapped(int index) {
@@ -33,25 +30,23 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         title: Text('Screen ${_selectedIndex + 1}'),
       ),
       body: _screens[_selectedIndex],
-      bottomNavigationBar: CurvedNavigationBar(
-        // Change as needed
-        items: const <Widget>[
-          Icon(Icons.home, color: Colors.white, size: 30),
-           Icon(Icons.history, color: Colors.white, size: 30),
-          Icon(Icons.add, color: Colors.white, size: 30),
-          Icon(Icons.message, color: Colors.white, size: 30),
-          Icon(Icons.notifications,
-              color: Colors.white, size: 30), // Use notifications icon
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.looks_one),
+            label: '1',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.looks_two),
+            label: '2',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.looks_3),
+            label: '3',
+          ),
         ],
-
-        index: _selectedIndex,
+        currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        height: 60.0,
-        color: Color.fromRGBO(0, 39, 56, 1.0),
-        buttonBackgroundColor: Color.fromRGBO(0, 39, 56, 1.0),
-        backgroundColor: Colors.white,
-        animationCurve: Curves.easeInOut,
-        animationDuration: Duration(milliseconds: 600),
       ),
     );
   }
