@@ -14,7 +14,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    Screen1(),
+    HomeScreen(),
     Screen2(),
     Screen3(),
     Screen4(),
@@ -37,7 +37,8 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         // Change as needed
         items: const <Widget>[
           Icon(Icons.home, color: Colors.white, size: 30),
-          Icon(Icons.add_shopping_cart_sharp, color: Colors.white, size: 30),
+           Icon(Icons.history, color: Colors.white, size: 30),
+          Icon(Icons.add, color: Colors.white, size: 30),
           Icon(Icons.message, color: Colors.white, size: 30),
           Icon(Icons.notifications,
               color: Colors.white, size: 30), // Use notifications icon
