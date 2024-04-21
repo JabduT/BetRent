@@ -25,18 +25,27 @@ exports.createUser = async (req, res) => {
 exports.Login = async (req, res) => {
   try {
   const { phoneNumber, PIN } = req.body;
-const user=await User.findOne({phoneNumber})
-  const isMatch=await user.checkPIN(PIN, user.PIN)
-  console.log(isMatch);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'In correct PIN' });
-    }
+    // Validate user input
+    const { error } = validateUser(req.body);
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
+
+    // Find user by phone number
+    const user = await User.findOne({ phoneNumber });
     if (!user) {
       return res.status(400).json({ message: "Invalid phone number or PIN" });
     }
-    // Authentication logic (createSendToken function) goes here
-    authentication.createSendToken(user,200,res);
-    
+    // Compare hashed PIN
+    const validPin = await bcrypt.compare(PIN, user.PIN);
+    if (!validPin) {
+      return res.status(400).json({ message: "Invalid phone number or PIN" });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: user._id }, "your_secret_key", {
+      expiresIn: "1h",
+    });
+    res.json({ token });
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).json({ message: 'Server error' });
@@ -51,11 +60,24 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// Create a new user
+exports.createUser = async (req, res) => {
+  // Validate user input
+  const { error } = validateUser(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
 
-exports.getMe =async (req, res, next) => {
-  req.params.userId = req.user.id;
-  next();
+  try {
+    const user = new User(req.body);
+    await user.save();
+
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
+
 // Get user by ID
 exports.getUserById = async (req, res) => {
   try {
