@@ -1,31 +1,40 @@
 const { User, validateUser } = require("../models/user");
 const Joi = require("joi");
+const authentication=require("../middleware/authentication");
+// create new user controller
+exports.createUser = async (req, res) => {
+  // Validate user input
+  const { error } = validateUser(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
 
-// controllers/authController.js
+  try {
+    const user = new User(req.body);
+    await user.save();
+    authentication.createSendToken(user,201,res);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
 
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-
+// login
 exports.Login = async (req, res) => {
   try {
     const { phoneNumber, PIN } = req.body;
-console.log(PIN);
-    const user = await User.findOne({ PIN });
+const user=User.findOne({phoneNumber});
+    // Hash the incoming PIN to match the stored hashed PIN in the database
+    const hashedPIN = await bcrypt.hash(PIN, 10);
+    const isMatch = await user.comparePIN(hashedPIN);
+    console.log(isMatch);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'In correct PIN' });
+    }
     if (!user) {
       return res.status(400).json({ message: "Invalid phone number or PIN" });
     }
-
-    // Compare hashed PIN
-    const validPin = await bcrypt.compare(PIN, user.PIN);
-    if (!validPin) {
-      return res.status(400).json({ message: "Invalid phone number or PIN" });
-    }
-
-    // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, "your_secret_key", {
-      expiresIn: "1h",
-    });
-    res.json({ token });
+    authentication.createSendToken(user, 200, res);
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).json({ message: 'Server error' });
