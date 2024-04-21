@@ -1,6 +1,6 @@
 // controllers/userController.js
 
-const { User, validateUser } = require("../models/User");
+const { User, validateUser } = require("../models/user");
 const Joi = require("joi");
 
 // controllers/authController.js
