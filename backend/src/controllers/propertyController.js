@@ -3,9 +3,9 @@
 const { Property, validateProperty } = require("../models/property");
 const Joi = require("joi");
 
-const fs = require('fs');
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+const fs = require("fs");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
 
 exports.createProperty = async (req, res) => {
   // Validate property input
@@ -18,14 +18,14 @@ exports.createProperty = async (req, res) => {
     const property = new Property(req.body);
 
     // Handle file uploads
-    const uploadsDir = path.join(__dirname, '..', 'uploads');
+    const uploadsDir = path.join(__dirname, "..", "uploads");
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir);
     }
 
     if (req.files && req.files.length > 0) {
       property.files = [];
-      req.files.forEach(file => {
+      req.files.forEach((file) => {
         const filename = uuidv4() + path.extname(file.originalname);
         const filePath = path.join(uploadsDir, filename);
         fs.writeFileSync(filePath, file.buffer);
@@ -116,7 +116,6 @@ exports.getAllProperties = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 // Get property by ID
 exports.getPropertyById = async (req, res) => {
