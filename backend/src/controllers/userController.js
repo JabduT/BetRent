@@ -1,7 +1,10 @@
 const { User, validateUser } = require("../models/user");
 const Joi = require("joi");
-const bcrypt = require("bcrypt");
 
+// controllers/authController.js
+
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const authentication=require("../middleware/authentication");
 // create new user controller
 exports.createUser = async (req, res) => {
@@ -11,17 +14,6 @@ exports.createUser = async (req, res) => {
     return res.status(400).json({ message: error.details[0].message });
   }
 
-  try {
-    const user = new User(req.body);
-    await user.save();
-    authentication.createSendToken(user,201,res);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// login
 exports.Login = async (req, res) => {
   try {
   const { phoneNumber, PIN } = req.body;
