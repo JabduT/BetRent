@@ -15,6 +15,13 @@ const {
   deleteProperty,
 } = require("../controllers/propertyController");
 const authenticate = require("../middleware/authentication");
+const {
+  getAllFavorites,
+  getFavoriteById,
+  createFavorite,
+  updateFavorite,
+  deleteFavorite,
+} = require("../controllers/favoriteController");
 const router = express.Router();
 
 //LOGIN
