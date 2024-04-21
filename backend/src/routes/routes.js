@@ -14,12 +14,12 @@ const {
   updateProperty,
   deleteProperty,
 } = require("../controllers/propertyController");
-const authenticate = require("../middleware/authentication");
+const {authenticate} = require("../middleware/authentication");
 const router = express.Router();
 
 //LOGIN
 router.post("/login", Login);
-
+router.post('/users/create',createUser);
 //view
 router.get("/users", getAllUsers);
 router.get("/users/:id", getUserById);
