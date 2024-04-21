@@ -7,9 +7,6 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -23,7 +20,13 @@ class LoginScreen extends StatelessWidget {
               width: 50,
             ),
             Center(
-              child: Text("Login to your account"),
+              child: Text(
+                "Login to your account",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold, // Bold font weight
+                  color: AppConstants.primaryColor, // Primary color
+                ),
+              ),
             ),
             SizedBox(height: 20),
             // Phone Number Field
@@ -32,7 +35,8 @@ class LoginScreen extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Phone Number',
                 filled: true,
-                fillColor: AppConstants.primaryColor.withOpacity(0.2), // 30% opacity
+                fillColor:
+                    AppConstants.primaryColor.withOpacity(0.3), // 30% opacity
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none, // No border
                   borderRadius: BorderRadius.circular(10.0),
@@ -40,10 +44,11 @@ class LoginScreen extends StatelessWidget {
                 prefixText: '+251', // Country code
                 prefixStyle: TextStyle(color: Colors.black),
                 suffixIcon: Container(
-                  height: 57,
+                  height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color: AppConstants.primaryColor, // Background color for icon
+                    color:
+                        AppConstants.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.phone,
@@ -60,16 +65,18 @@ class LoginScreen extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'PIN',
                 filled: true,
-                fillColor: AppConstants.primaryColor.withOpacity(0.3), // 30% opacity
+                fillColor:
+                    AppConstants.primaryColor.withOpacity(0.3), // 30% opacity
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none, // No border
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 suffixIcon: Container(
-                  height: 57,
+                  height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color: AppConstants.primaryColor, // Background color for icon
+                    color:
+                        AppConstants.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.lock,
@@ -83,7 +90,20 @@ class LoginScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/home');
               },
-              child: Text('Login'),
+              style: ElevatedButton.styleFrom(
+              
+                backgroundColor: AppConstants
+                    .primaryColor, // Primary color as background color
+              ),
+              child: const Text(
+                'Login',
+                
+                style: TextStyle(
+                  height: 3.5,
+                  fontWeight: FontWeight.bold, // Bold font weight
+                  color: Colors.white, // Primary color
+                ),
+              ),
             ),
             SizedBox(height: 20),
             GestureDetector(
