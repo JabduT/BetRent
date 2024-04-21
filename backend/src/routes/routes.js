@@ -14,8 +14,7 @@ const {
   createProperty,
   updateProperty,
   deleteProperty,
-} = require("../controllers/propertyController");
-const {authenticate} = require("../middleware/authentication");
+} = require("../controllers/propertyController");const authenticate = require("../middleware/authentication");
 const {
   getAllFavorites,
   getFavoriteById,
