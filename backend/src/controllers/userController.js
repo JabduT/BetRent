@@ -32,8 +32,18 @@ const user=User.findOne({phoneNumber});
     if (!isMatch) {
       return res.status(400).json({ message: 'In correct PIN' });
     }
+exports.Login = async (req, res) => {
+  try {
+    const { phoneNumber, PIN } = req.body;
+    // Validate user input
+    const { error } = validateUser(req.body);
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
+
+    // Find user by phone number
+    const user = await User.findOne({ phoneNumber });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid phoneNumber or PIN' });
+      return res.status(400).json({ message: "Invalid phone number or PIN" });
     }
     // Authentication logic (createSendToken function) goes here
     
@@ -87,15 +97,4 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// Delete user by ID
-exports.deleteUser = async (req, res) => {
-  try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.json({ message: "User deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+
