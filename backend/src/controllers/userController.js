@@ -1,5 +1,7 @@
 const { User, validateUser } = require("../models/user");
 const Joi = require("joi");
+const bcrypt = require("bcrypt");
+
 const authentication=require("../middleware/authentication");
 // create new user controller
 exports.createUser = async (req, res) => {
@@ -22,13 +24,19 @@ exports.createUser = async (req, res) => {
 // login
 exports.Login = async (req, res) => {
   try {
-    const { phoneNumber, PIN } = req.body;
-console.log(PIN);
-    const user = await User.findOne({ PIN });
+  const { phoneNumber, PIN } = req.body;
+const user=await User.findOne({phoneNumber})
+  const isMatch=await user.checkPIN(PIN, user.PIN)
+  console.log(isMatch);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'In correct PIN' });
+    }
     if (!user) {
       return res.status(400).json({ message: 'Invalid phoneNumber or PIN' });
     }
-    authentication.createSendToken(user, 200, res);
+    // Authentication logic (createSendToken function) goes here
+    authentication.createSendToken(user,200,res);
+    
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).json({ message: 'Server error' });

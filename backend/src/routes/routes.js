@@ -21,7 +21,7 @@ const router = express.Router();
 router.post("/login", Login);
 router.post('/users/create',createUser);
 //view
-router.get("/users", getAllUsers);
+router.get("/users", authenticate, getAllUsers);
 router.get("/users/:id", getUserById);
 
 router.post("/users", createUser);
@@ -31,7 +31,7 @@ router.delete("/users/:id", deleteUser);
 //property || house
 //view
 router.get("/properties", getAllProperties);
-router.get("/properties/:id", authenticate, getPropertyById);
+//router.get("/properties/:id", authenticate, getPropertyById);
 
 router.post("/properties", createProperty);
 router.put("/properties/:id", updateProperty);
