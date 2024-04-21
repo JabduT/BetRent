@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.red,
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => LoginScreen(),
-        "/register": (context) => RegisterScreen(),
+        "/register": (context) => SignUpScreen(),
         '/home': (context) => MyBottomNavigationBar(),
         '/screen1': (context) => HomeScreen(),
         '/screen2': (context) => Screen2(),

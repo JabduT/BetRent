@@ -2,12 +2,15 @@ const express = require("express");
 const dotenv = require("dotenv");
 const router = require("./src/routes/routes");
 const bodyParser = require("body-parser");
-
+const cors = require('cors');
 // Load environment variables
 dotenv.config();
 
+
 // Create Express app
 const app = express();
+
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.json());
