@@ -9,6 +9,7 @@ class Property {
   final String type;
   final int roomNumber;
   final int bedRoomNum;
+  final int propertySize;
   final String address;
   final List<String> files;
   final int price;
@@ -18,30 +19,57 @@ class Property {
     required this.type,
     required this.roomNumber,
     required this.bedRoomNum,
+    required this.propertySize,
     required this.address,
     required this.files,
     required this.price,
   });
 }
 
-class PropertyListScreen extends StatefulWidget {
-  @override
-  _PropertyListScreenState createState() => _PropertyListScreenState();
-}
-
 class _PropertyListScreenState extends State<PropertyListScreen> {
   late List<Property> properties = [];
+  late TextEditingController _searchController;
+  String selectedType = '';
+
+  // Define the list of filter options
+  final List<String> filterOptions = [
+    "Apartment",
+    "Condo",
+    "House",
+    "Studio Apartment",
+    "Villa",
+    "Bedsitter",
+    "Block of Flats",
+    "Chalet",
+    "Duplex",
+    "Farm House",
+    "Mansion",
+    "Penthouse",
+    "Room & Parlour",
+    "Shared Apartment",
+    "Townhouse / Terrace",
+  ];
 
   @override
   void initState() {
     super.initState();
+    _searchController = TextEditingController();
     fetchData();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchData() async {
     try {
-      final response =
-          await http.get(Uri.parse('${AppConstants.APIURL}/properties'));
+      final response = await http.get(
+        Uri.parse(
+          '${AppConstants.APIURL}/properties${_buildQueryParams()}',
+        ),
+      );
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body);
@@ -52,6 +80,7 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
                     type: data['type'],
                     roomNumber: data['roomNumber'],
                     bedRoomNum: data['bedRoomNum'],
+                    propertySize: data['propertySize'],
                     address: data['address'],
                     files: List<String>.from(data['files']),
                     price: data['price'],
@@ -62,21 +91,107 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
         throw Exception('Failed to load properties: ${response.statusCode}');
       }
     } catch (e) {
-      // Handle error gracefully, e.g., show a snackbar with error message
+      setState(() {
+        properties = [];
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Failed to load properties. Please check your internet connection and try again.'),
+            'Failed to load properties. Please check your internet connection and try again.',
+          ),
         ),
       );
     }
   }
 
+  void search() {
+    setState(() {
+      fetchData();
+    });
+  }
+
+  String _buildQueryParams() {
+    String queryParams = '';
+    if (_searchController.text.isNotEmpty) {
+      queryParams = '?q=${_searchController.text}';
+    }
+    if (selectedType.isNotEmpty) {
+      queryParams +=
+          '${_searchController.text.isEmpty ? '?' : '&'}type=$selectedType';
+    }
+    return queryParams;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Property Listing'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(120),
+        child: AppBar(
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(60),
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  margin: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: 'Search...',
+                            border: InputBorder.none,
+                          ),
+                          onSubmitted: (_) => search(),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: search,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: filterOptions
+                        .map((filter) => Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: FilterChip(
+                                label: Text(filter),
+                                selected: selectedType == filter,
+                                onSelected: (isSelected) {
+                                  setState(() {
+                                    selectedType = isSelected ? filter : '';
+                                  });
+                                  fetchData();
+                                },
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: properties.isEmpty
           ? Center(child: CircularProgressIndicator())
@@ -89,6 +204,12 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
     );
   }
 }
+
+class PropertyListScreen extends StatefulWidget {
+  @override
+  _PropertyListScreenState createState() => _PropertyListScreenState();
+}
+
 class PropertyListItem extends StatelessWidget {
   final Property property;
 
@@ -97,6 +218,7 @@ class PropertyListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.all(4.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
@@ -107,6 +229,7 @@ class PropertyListItem extends StatelessWidget {
             offset: Offset(0, 3),
           ),
         ],
+        color: Colors.white, // Set the background color to white
       ),
       child: Padding(
         padding: EdgeInsets.all(8.0),
@@ -122,20 +245,27 @@ class PropertyListItem extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   SizedBox(height: 4),
+                  Text('${property.address}'),
+                  SizedBox(height: 4),
                   Row(
                     children: [
                       Icon(Icons.apartment),
-                      SizedBox(width: 4),
                       Text('${property.roomNumber}'),
+                      SizedBox(width: 6),
                       Icon(Icons.king_bed),
-                      SizedBox(width: 4),
                       Text('${property.bedRoomNum}'),
+                    ],
+                  ),
+                  SizedBox(width: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.fullscreen),
+                      Text('${property.propertySize}'),
+                      SizedBox(width: 4),
                     ],
                   ),
                   Row(
                     children: [
-                      Text('${property.address}'),
-                      SizedBox(width: 4),
                       TextButton(
                         onPressed: () {}, // Add your action here
                         style: ButtonStyle(
@@ -156,6 +286,8 @@ class PropertyListItem extends StatelessWidget {
                         ),
                         child: Text('${property.price} BIRR'),
                       ),
+                      SizedBox(width: 4),
+                      Icon(Icons.favorite_outline),
                     ],
                   ),
                 ],
