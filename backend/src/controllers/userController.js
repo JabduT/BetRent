@@ -23,7 +23,6 @@ exports.createUser = async (req, res) => {
 // login
 exports.Login = async (req, res) => {
   try {
-    console.log("hereh i am")
   const { phoneNumber, PIN } = req.body;
 const user=await User.findOne({phoneNumber})
   const isMatch=await user.checkPIN(PIN, user.PIN)
