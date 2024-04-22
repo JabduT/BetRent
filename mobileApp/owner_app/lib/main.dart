@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:owner_app/screens/authentication/register.dart';
-import 'package:owner_app/widgets/my_bottom_navigation_bar.dart';
+import 'package:owner_app/widgets/bottom_bar_owner.dart';
 import 'package:owner_app/screens/screen1.dart';
 import 'package:owner_app/screens/screen2.dart';
 import 'package:owner_app/screens/screen3.dart';
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginScreen(),
         '/register': (context) => SignUpScreen(),
-        '/home': (context) => MyBottomNavigationBar(),
+        '/home': (context) => OwnerBottomNavigationBar(),
         '/screen1': (context) => PropertyListScreen(),
         '/screen2': (context) => Screen2(),
         '/screen3': (context) => Screen3(),

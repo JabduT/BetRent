@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:owner_app/constants/url.dart';
 import 'package:owner_app/screens/authentication/register.dart';
 import 'package:owner_app/screens/screen1.dart';
 import 'package:owner_app/themes/colors.dart';
@@ -18,7 +19,7 @@ class SignUpScreen extends StatelessWidget {
 
     // Send POST request to signUp API
     final response = await http.post(
-      Uri.parse('http://localhost:5000/api/users'),
+      Uri.parse('${AppConstants.APIURL}/users'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -32,15 +33,12 @@ class SignUpScreen extends StatelessWidget {
     print('Response status code: ${response.statusCode}');
     print('Response body: ${response.body}');
 
-    // Handle response
     if (response.statusCode == 200) {
-      // If signUp is successful, save token to flutter_secure_storage
       final storage = FlutterSecureStorage();
       await storage.write(
           key: 'token', value: jsonDecode(response.body)['token']);
 
-      // Redirect user to home screen
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/home');
     } else {
       // If signUp fails, show error message
       showDialog(
@@ -103,8 +101,7 @@ class SignUpScreen extends StatelessWidget {
                   height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color:
-                        AppColors.primaryColor, // Background color for icon
+                    color: AppColors.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.phone,
@@ -132,8 +129,7 @@ class SignUpScreen extends StatelessWidget {
                   height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color:
-                        AppColors.primaryColor, // Background color for icon
+                    color: AppColors.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.lock,
@@ -161,8 +157,7 @@ class SignUpScreen extends StatelessWidget {
                   height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color:
-                        AppColors.primaryColor, // Background color for icon
+                    color: AppColors.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.lock,

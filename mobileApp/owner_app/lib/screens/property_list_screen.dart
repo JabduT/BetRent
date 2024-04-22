@@ -175,7 +175,7 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
                   child: Row(
                     children: filterOptions
                         .map((filter) => Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
                               child: FilterChip(
                                 label: Text(filter),
                                 selected: selectedType == filter,

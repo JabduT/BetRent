@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:owner_app/constants/url.dart';
 import 'package:owner_app/screens/authentication/register.dart';
 import 'package:owner_app/screens/screen1.dart';
 import 'package:owner_app/themes/colors.dart';
@@ -15,9 +16,8 @@ class LoginScreen extends StatelessWidget {
     String phoneNumber = phoneController.text.trim();
     String pin = pinController.text.trim();
 
-    // Send POST request to login API
     final response = await http.post(
-      Uri.parse('http://localhost:5000/api/login'),
+      Uri.parse('${AppConstants.APIURL}/login'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -31,17 +31,13 @@ class LoginScreen extends StatelessWidget {
     print('Response status code: ${response.statusCode}');
     print('Response body: ${response.body}');
 
-    // Handle response
     if (response.statusCode == 200) {
-      // If login is successful, save token to flutter_secure_storage
       final storage = FlutterSecureStorage();
       await storage.write(
           key: 'token', value: jsonDecode(response.body)['token']);
       print("okay here");
-      // Redirect user to home screen
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/home');
     } else {
-      // If login fails, show error message
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -102,8 +98,7 @@ class LoginScreen extends StatelessWidget {
                   height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color:
-                        AppColors.primaryColor, // Background color for icon
+                    color: AppColors.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.phone,
@@ -131,8 +126,7 @@ class LoginScreen extends StatelessWidget {
                   height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color:
-                        AppColors.primaryColor, // Background color for icon
+                    color: AppColors.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.lock,
