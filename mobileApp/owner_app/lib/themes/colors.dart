@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppConstants {
-  static final Color primaryColor = Color.fromRGBO(0, 39, 56, 1.0);
+  static final Color primaryColor = Color.fromRGBO(14, 47, 79, 1.0);
+  static final Color secondaryColor = Color.fromRGBO(248, 189, 13, 1.0);
 
   // static final Color backgroundColor = Color(0xFFC7B4FF);
 }
