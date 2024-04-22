@@ -78,18 +78,6 @@ exports.getAllUsers = async (req, res) => {
 
 // login
 exports.Login = async (req, res) => {
-exports.Login = async (req, res) => {
-  try {
-  const { phoneNumber, PIN } = req.body;
-const user=User.findOne({phoneNumber});
-    // Hash the incoming PIN to match the stored hashed PIN in the database
-    const hashedPIN = await bcrypt.hash(PIN, 10);
-    const isMatch = await user.comparePIN(hashedPIN);
-    console.log(isMatch);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'In correct PIN' });
-    }
-exports.Login = async (req, res) => {
   try {
     const { phoneNumber, PIN } = req.body;console.log(PIN);
     const user = await User.findOne({ PIN });
