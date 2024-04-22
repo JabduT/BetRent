@@ -6,3 +6,4 @@ class AppConstants {
 
   // static final Color backgroundColor = Color(0xFFC7B4FF);
 }
+ 
