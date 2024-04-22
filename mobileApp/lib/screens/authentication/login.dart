@@ -35,8 +35,15 @@ class LoginScreen extends StatelessWidget {
       final storage = FlutterSecureStorage();
       await storage.write(
           key: 'token', value: jsonDecode(response.body)['token']);
+      Map<String, dynamic> responseBody = jsonDecode(response.body);
+      String role = responseBody['user']
+          ['role']; // Assuming 'user' contains the role property
+      print(role);
       print("okay here");
-      Navigator.pushReplacementNamed(context, '/home');
+      if (role == 'renter') {
+        Navigator.pushReplacementNamed(context, '/renter_home');
+      } else
+        Navigator.pushReplacementNamed(context, '/owner_home');
     } else {
       showDialog(
         context: context,

@@ -7,6 +7,7 @@ import 'package:owner_app/screens/screen3.dart';
 import 'package:owner_app/screens/screen4.dart';
 import 'package:owner_app/screens/authentication/login.dart'; // Import the login screen
 import 'package:owner_app/screens/property_list_screen.dart';
+import 'package:owner_app/widgets/bottom_bar_renter.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,11 +22,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      initialRoute: '/screen1',
+      initialRoute: '/home',
       routes: {
         '/login': (context) => LoginScreen(),
         '/register': (context) => SignUpScreen(),
-        '/home': (context) => OwnerBottomNavigationBar(),
+        '/owner_home': (context) => OwnerBottomNavigationBar(),
+        '/renter_home': (context) => RenterBottomNavigationBar(),
         '/screen1': (context) => PropertyListScreen(),
         '/screen4': (context) => Screen4(),
       },

@@ -18,6 +18,7 @@ class _OwnerBottomNavigationBarState extends State<OwnerBottomNavigationBar> {
   final List<Widget> _screens = [
     HomeScreen(),
     PropertyListScreen(),
+    AddHouseRentScreen(),
     Screen2(),
     // Screen3(),
     Screen4(),
