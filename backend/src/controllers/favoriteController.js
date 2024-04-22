@@ -1,5 +1,5 @@
-const { Favorite } = require('../models/Favorite');
-const { User } = require('../models/User');
+const { Favorite } = require('../models/favorite');
+const { User } = require('../models/user');
 const { Property } = require('../models/property');
 
 // Create a new favorite
