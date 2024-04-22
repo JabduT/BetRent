@@ -160,7 +160,7 @@ class LoginScreen extends StatelessWidget {
                 Expanded(
                   child: Divider(
                     height: 20,
-                    thickness: 2,
+                    thickness: 1,
                     color: AppConstants.primaryColor,
                   ),
                 ),
@@ -169,7 +169,7 @@ class LoginScreen extends StatelessWidget {
                   child: Text(
                     'or',
                     style: TextStyle(
-                      color: AppConstants.primaryColor,
+                      color: AppConstants.secondaryColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -177,7 +177,7 @@ class LoginScreen extends StatelessWidget {
                 Expanded(
                   child: Divider(
                     height: 20,
-                    thickness: 2,
+                    thickness: 1,
                     color: AppConstants.primaryColor,
                   ),
                 ),
@@ -197,7 +197,7 @@ class LoginScreen extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'Sign Up',
-                    style: TextStyle(color: AppConstants.primaryColor),
+                    style: TextStyle(color: AppConstants.secondaryColor),
                   ),
                 ),
               ),
