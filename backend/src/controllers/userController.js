@@ -2,10 +2,6 @@
 
 const { User, validateUser } = require("../models/User");
 const Joi = require("joi");
-
-// controllers/authController.js
-
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 exports.Login = async (req, res) => {
@@ -47,6 +43,15 @@ exports.getAllUsers = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+
+  try {
+    const user = new User(req.body);
+    await user.save();
+    authentication.createSendToken(user,201,res);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // Create a new user
@@ -67,6 +72,10 @@ exports.createUser = async (req, res) => {
   }
 };
 
+exports.getMe =async (req, res, next) => {
+  req.params.userId = req.user.id;
+  next();
+};
 // Get user by ID
 exports.getUserById = async (req, res) => {
   try {
@@ -106,9 +115,9 @@ exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
-    res.json({ message: "User deleted successfully" });
+    res.json({ message: 'User deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

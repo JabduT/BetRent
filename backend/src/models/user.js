@@ -44,7 +44,13 @@ userSchema.pre("save", async function (next) {
     next(error);
   }
 });
-
+// Define instance method to compare PIN
+userSchema.methods.checkPIN = async function (
+  candidatePIN,
+  userPIN
+) {
+  return await bcrypt.compare(candidatePIN, userPIN);
+};
 const User = mongoose.model("User", userSchema);
 
 function validateUser(user) {

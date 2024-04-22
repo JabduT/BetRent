@@ -6,6 +6,7 @@ const {
   updateUser,
   deleteUser,
   Login,
+  getMe
 } = require("../controllers/userController");
 const {
   getAllProperties,
@@ -14,7 +15,7 @@ const {
   updateProperty,
   deleteProperty,
 } = require("../controllers/propertyController");
-const authenticate = require("../middleware/authentication");
+const {authenticate} = require("../middleware/authentication");
 const {
   getAllFavorites,
   getFavoriteById,
@@ -26,12 +27,11 @@ const router = express.Router();
 
 //LOGIN
 router.post("/login", Login);
-
+router.post('/users/create',createUser);
 //view
 router.get("/users", getAllUsers);
 router.get("/users/:id", getUserById);
-
-router.post("/users", createUser);
+router.route("users/profile").get(getMe,getUserById).put(getMe,updateUser);
 router.put("/users/:id", updateUser);
 router.delete("/users/:id", deleteUser);
 
@@ -39,6 +39,7 @@ router.delete("/users/:id", deleteUser);
 //view
 router.get("/properties", getAllProperties);
 router.get("/properties/:id", authenticate, getPropertyById);
+//router.get("/properties/:id", authenticate, getPropertyById);
 
 router.post("/properties", createProperty);
 router.put("/properties/:id", updateProperty);

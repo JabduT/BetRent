@@ -1,43 +1,61 @@
 const jwt = require("jsonwebtoken");
-const { User } = require("../models/User");
+const { promisify } = require("util");
+const bcrypt = require("bcrypt");
 
-const authenticate = (req, res, next) => {
-  // Get the token from the request headers
-  const token = req.header("Authorization");
+signToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET_KEY , {
+    expiresIn: '1h',
+  });
+};
 
-  // Check if token is present
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access denied. No token provided." });
+ exports.createSendToken =  (user, statusCode, res) => {
+  const token = signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() +
+        parseInt(process.env.JWT_COOKIE_EXPIRES_IN, 10) *
+          24 *
+          60 *
+          60 *
+          1000
+    ),
+    httpOnly: true,
+  };
+  if (process.env.NODE_ENV === 'production') {
+    cookieOptions.secure = true;
   }
+  res.cookie('jwt', token, cookieOptions);
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+      user,
+      });
+};
 
-  try {
-    // Verify the token
-    const decoded = jwt.verify(token, "your_secret_key");
-
-    // Check if decoded token contains userId
-    if (!decoded.userId) {
-      return res
-        .status(401)
-        .json({ message: "Invalid token. No userId found." });
-    }
-
-    // Find user by userId from decoded token
-    User.findById(decoded.userId, (err, user) => {
-      if (err || !user) {
-        return res
-          .status(401)
-          .json({ message: "Invalid token. User not found." });
-      }
-
-      // Set authenticated user in request object
-      req.user = user;
-      next(); // Move to the next middleware or route handler
-    });
-  } catch (error) {
-    return res.status(401).json({ message: "Invalid token." });
+// protect controller for authorization
+exports.authenticate = async (req, res, next) => {
+  let token;
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
+  if (!token) {
+    return next(
+      new AppError("You are not logged in! Please log in to get access.", 401)
+    );
+  }
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    return next(new AppError("No user is belongs to this token", 401));
+  }
+  req.user = currentUser;
+  next();
+  if (!token) {
+    return next(
+      new AppError("You are not logged in! Please log in to get access.", 401)
+    );
   }
 };
 
-module.exports = authenticate;
