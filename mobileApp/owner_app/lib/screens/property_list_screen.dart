@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; 
+import 'package:http/http.dart' as http;
 import 'package:owner_app/constants/url.dart';
- 
+import 'package:owner_app/themes/colors.dart';
+
 class Property {
   final String title;
   final String type;
@@ -88,7 +89,6 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
     );
   }
 }
-
 class PropertyListItem extends StatelessWidget {
   final Property property;
 
@@ -96,51 +96,80 @@ class PropertyListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  property.title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(Icons.apartment),
-                    SizedBox(width: 4),
-                    Text('${property.roomNumber}'),
-                    Icon(Icons.king_bed),
-                    SizedBox(width: 4),
-                    Text('${property.bedRoomNum}'),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('${property.address}'),
-                    Icon(Icons.king_bed),
-                    SizedBox(width: 4),
-                    Text('${property.price}'),
-                    SizedBox(width: 4),
-                    Text('${property.type}'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 16),
-          Image.network(
-            'http://localhost/api/${property.files.first}', // Assuming the API serves images from the same base URL
-            width: 100,
-            height: 100,
-            fit: BoxFit.cover,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
           ),
         ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    property.title,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.apartment),
+                      SizedBox(width: 4),
+                      Text('${property.roomNumber}'),
+                      Icon(Icons.king_bed),
+                      SizedBox(width: 4),
+                      Text('${property.bedRoomNum}'),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('${property.address}'),
+                      SizedBox(width: 4),
+                      TextButton(
+                        onPressed: () {}, // Add your action here
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              AppColors.primaryColor),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                              side: BorderSide(color: AppColors.primaryColor),
+                            ),
+                          ),
+                          shadowColor: MaterialStateProperty.all<Color>(
+                              Colors.black.withOpacity(0.2)),
+                          elevation: MaterialStateProperty.all<double>(3.0),
+                        ),
+                        child: Text('${property.price} BIRR'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 16),
+            Image.network(
+              'http://localhost/api/${property.files.first}', // Assuming the API serves images from the same base URL
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
+            ),
+          ],
+        ),
       ),
     );
   }

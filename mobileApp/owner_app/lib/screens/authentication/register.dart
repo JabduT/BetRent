@@ -79,7 +79,7 @@ class SignUpScreen extends StatelessWidget {
                 "SignUp to your account",
                 style: TextStyle(
                   fontWeight: FontWeight.bold, // Bold font weight
-                  color: AppConstants.primaryColor, // Primary color
+                  color: AppColors.primaryColor, // Primary color
                 ),
               ),
             ),
@@ -92,7 +92,7 @@ class SignUpScreen extends StatelessWidget {
                 labelText: 'Phone Number',
                 filled: true,
                 fillColor:
-                    AppConstants.primaryColor.withOpacity(0.3), // 30% opacity
+                    AppColors.primaryColor.withOpacity(0.3), // 30% opacity
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none, // No border
                   borderRadius: BorderRadius.circular(10.0),
@@ -104,7 +104,7 @@ class SignUpScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color:
-                        AppConstants.primaryColor, // Background color for icon
+                        AppColors.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.phone,
@@ -123,7 +123,7 @@ class SignUpScreen extends StatelessWidget {
                 labelText: 'PIN',
                 filled: true,
                 fillColor:
-                    AppConstants.primaryColor.withOpacity(0.3), // 30% opacity
+                    AppColors.primaryColor.withOpacity(0.3), // 30% opacity
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none, // No border
                   borderRadius: BorderRadius.circular(10.0),
@@ -133,7 +133,7 @@ class SignUpScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color:
-                        AppConstants.primaryColor, // Background color for icon
+                        AppColors.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.lock,
@@ -152,7 +152,7 @@ class SignUpScreen extends StatelessWidget {
                 labelText: 'Confirm PIN',
                 filled: true,
                 fillColor:
-                    AppConstants.primaryColor.withOpacity(0.3), // 30% opacity
+                    AppColors.primaryColor.withOpacity(0.3), // 30% opacity
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none, // No border
                   borderRadius: BorderRadius.circular(10.0),
@@ -162,7 +162,7 @@ class SignUpScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color:
-                        AppConstants.primaryColor, // Background color for icon
+                        AppColors.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.lock,
@@ -200,7 +200,7 @@ class SignUpScreen extends StatelessWidget {
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
-                  AppConstants.primaryColor,
+                  AppColors.primaryColor,
                 ),
               ),
               child: const Text(
@@ -221,7 +221,7 @@ class SignUpScreen extends StatelessWidget {
                   child: Divider(
                     height: 20,
                     thickness: 2,
-                    color: AppConstants.primaryColor,
+                    color: AppColors.primaryColor,
                   ),
                 ),
                 Padding(
@@ -229,7 +229,7 @@ class SignUpScreen extends StatelessWidget {
                   child: Text(
                     'or',
                     style: TextStyle(
-                      color: AppConstants.primaryColor,
+                      color: AppColors.primaryColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -238,7 +238,7 @@ class SignUpScreen extends StatelessWidget {
                   child: Divider(
                     height: 20,
                     thickness: 2,
-                    color: AppConstants.primaryColor,
+                    color: AppColors.primaryColor,
                   ),
                 ),
               ],
@@ -253,13 +253,13 @@ class SignUpScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: AppConstants.primaryColor), // Primary color border
+                      color: AppColors.primaryColor), // Primary color border
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: Center(
                   child: Text(
                     'Login',
-                    style: TextStyle(color: AppConstants.primaryColor),
+                    style: TextStyle(color: AppColors.primaryColor),
                   ),
                 ),
               ),

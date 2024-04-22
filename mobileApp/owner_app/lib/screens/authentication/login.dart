@@ -35,8 +35,9 @@ class LoginScreen extends StatelessWidget {
     if (response.statusCode == 200) {
       // If login is successful, save token to flutter_secure_storage
       final storage = FlutterSecureStorage();
-      await storage.write(key: 'token', value: jsonDecode(response.body)['token']);
-
+      await storage.write(
+          key: 'token', value: jsonDecode(response.body)['token']);
+      print("okay here");
       // Redirect user to home screen
       Navigator.pushNamed(context, '/home');
     } else {
@@ -77,7 +78,7 @@ class LoginScreen extends StatelessWidget {
                 "Login to your account",
                 style: TextStyle(
                   fontWeight: FontWeight.bold, // Bold font weight
-                  color: AppConstants.primaryColor, // Primary color
+                  color: AppColors.primaryColor, // Primary color
                 ),
               ),
             ),
@@ -89,7 +90,8 @@ class LoginScreen extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Phone Number',
                 filled: true,
-                fillColor: AppConstants.primaryColor.withOpacity(0.3), // 30% opacity
+                fillColor:
+                    AppColors.primaryColor.withOpacity(0.3), // 30% opacity
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none, // No border
                   borderRadius: BorderRadius.circular(10.0),
@@ -100,7 +102,8 @@ class LoginScreen extends StatelessWidget {
                   height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color: AppConstants.primaryColor, // Background color for icon
+                    color:
+                        AppColors.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.phone,
@@ -118,7 +121,8 @@ class LoginScreen extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'PIN',
                 filled: true,
-                fillColor: AppConstants.primaryColor.withOpacity(0.3), // 30% opacity
+                fillColor:
+                    AppColors.primaryColor.withOpacity(0.3), // 30% opacity
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none, // No border
                   borderRadius: BorderRadius.circular(10.0),
@@ -127,7 +131,8 @@ class LoginScreen extends StatelessWidget {
                   height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color: AppConstants.primaryColor, // Background color for icon
+                    color:
+                        AppColors.primaryColor, // Background color for icon
                   ),
                   child: Icon(
                     Icons.lock,
@@ -141,7 +146,7 @@ class LoginScreen extends StatelessWidget {
               onPressed: () => loginUser(context),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
-                  AppConstants.primaryColor,
+                  AppColors.primaryColor,
                 ),
               ),
               child: const Text(
@@ -161,7 +166,7 @@ class LoginScreen extends StatelessWidget {
                   child: Divider(
                     height: 20,
                     thickness: 1,
-                    color: AppConstants.primaryColor,
+                    color: AppColors.primaryColor,
                   ),
                 ),
                 Padding(
@@ -169,7 +174,7 @@ class LoginScreen extends StatelessWidget {
                   child: Text(
                     'or',
                     style: TextStyle(
-                      color: AppConstants.secondaryColor,
+                      color: AppColors.secondaryColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -178,7 +183,7 @@ class LoginScreen extends StatelessWidget {
                   child: Divider(
                     height: 20,
                     thickness: 1,
-                    color: AppConstants.primaryColor,
+                    color: AppColors.primaryColor,
                   ),
                 ),
               ],
@@ -191,13 +196,14 @@ class LoginScreen extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppConstants.primaryColor), // Primary color border
+                  border: Border.all(
+                      color: AppColors.primaryColor), // Primary color border
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: Center(
                   child: Text(
                     'Sign Up',
-                    style: TextStyle(color: AppConstants.secondaryColor),
+                    style: TextStyle(color: AppColors.secondaryColor),
                   ),
                 ),
               ),

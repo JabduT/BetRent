@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:owner_app/screens/property_list_screen.dart';
 import 'package:owner_app/screens/screen1.dart';
 import 'package:owner_app/screens/screen2.dart';
 import 'package:owner_app/screens/screen3.dart';
@@ -15,6 +16,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
 
   final List<Widget> _screens = [
     HomeScreen(),
+    PropertyListScreen(),
     Screen2(),
     Screen3(),
     Screen4(),
@@ -29,15 +31,12 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Screen ${_selectedIndex + 1}'),
-      ),
       body: _screens[_selectedIndex],
       bottomNavigationBar: CurvedNavigationBar(
         // Change as needed
         items: const <Widget>[
           Icon(Icons.home, color: Colors.white, size: 30),
-           Icon(Icons.history, color: Colors.white, size: 30),
+          Icon(Icons.history, color: Colors.white, size: 30),
           Icon(Icons.add, color: Colors.white, size: 30),
           Icon(Icons.message, color: Colors.white, size: 30),
           Icon(Icons.notifications,

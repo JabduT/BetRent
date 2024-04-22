@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppConstants {
+class AppColors {
   static final Color primaryColor = Color.fromRGBO(14, 47, 79, 1.0);
   static final Color secondaryColor = Color.fromRGBO(248, 189, 13, 1.0);
 
@@ -9,12 +9,12 @@ class AppConstants {
  
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
-    primaryColor: AppConstants.primaryColor,
+    primaryColor: AppColors.primaryColor,
     // Other light mode theme properties
   );
 
   static final ThemeData darkTheme = ThemeData(
-    primaryColor: AppConstants.primaryColor,
+    primaryColor: AppColors.primaryColor,
     brightness: Brightness.dark,
     // Other dark mode theme properties
   );
