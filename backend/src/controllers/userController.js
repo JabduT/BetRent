@@ -4,43 +4,9 @@ const { User, validateUser } = require("../models/User");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 
-const authentication=require("../middleware/authentication");
-// create new user controller
-exports.createUser = async (req, res) => {
-  // Validate user input
-  const { error } = validateUser(req.body);
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
-
-  try {
-    const user = new User(req.body);
-    await user.save();
-    authentication.createSendToken(user,201,res);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// login
-
-// controllers/authController.js
-
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-
-const authentication=require("../middleware/authentication");
-// create new user controller
-exports.createUser = async (req, res) => {
-  // Validate user input
-  const { error } = validateUser(req.body);
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
-// login
 exports.Login = async (req, res) => {
-  try {const { phoneNumber, PIN } = req.body;
+  try {
+    const { phoneNumber, PIN } = req.body;
     // Validate user input
     const { error } = validateUser(req.body);
     if (error)
@@ -51,12 +17,24 @@ exports.Login = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "Invalid phone number or PIN" });
     }
-    authentication.createSendToken(user, 200, res);
+
+    // Compare hashed PIN
+    const validPin = await bcrypt.compare(PIN, user.PIN);
+    if (!validPin) {
+      return res.status(400).json({ message: "Invalid phone number or PIN" });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: user._id }, "your_secret_key", {
+      expiresIn: "1h",
+    });
+    res.json({ token });
   } catch (error) {
-  console.error("Login error:", error);
+    console.error("Login error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 // Get all users
 exports.getAllUsers = async (req, res) => {
   try {
@@ -64,7 +42,7 @@ exports.getAllUsers = async (req, res) => {
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }};
+  }
 
   try {
     const user = new User(req.body);
@@ -76,31 +54,22 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// login
-exports.Login = async (req, res) => {
-  try {
-    const { phoneNumber, PIN } = req.body;console.log(PIN);
-    const user = await User.findOne({ PIN });
-    if (!user) {
-      return res.status(400).json({ message: "Invalid phone number or PIN" });
-    }
-    // Authentication logic (createSendToken function) goes here
-    authentication.createSendToken(user,200,res);
-    
-  } catch (error) {
-  console.error('Error logging in:', error);
-    res.status(500).json({ message: 'Server error' });
+// Create a new user
+exports.createUser = async (req, res) => {
+  // Validate user input
+  const { error } = validateUser(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
   }
-};
-// Get all users
-exports.getAllUsers = async (req, res) => {
+
   try {
-    const users = await User.find();
-    res.status(200).json(users);
+    const user = new User(req.body);
+    await user.save();
+
+    res.status(201).json(user);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: error.message });
-}
+  }
 };
 
 exports.getMe =async (req, res, next) => {
