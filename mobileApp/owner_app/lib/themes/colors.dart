@@ -6,7 +6,7 @@ class AppConstants {
 
   // static final Color backgroundColor = Color(0xFFC7B4FF);
 }
-
+ 
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
     primaryColor: AppConstants.primaryColor,

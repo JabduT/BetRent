@@ -6,26 +6,27 @@ import 'package:owner_app/screens/screen2.dart';
 import 'package:owner_app/screens/screen3.dart';
 import 'package:owner_app/screens/screen4.dart';
 import 'package:owner_app/screens/authentication/login.dart'; // Import the login screen
+import 'package:owner_app/screens/property_list_screen.dart';
 
 void main() {
-  runApp(MyApp()); 
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-       debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      initialRoute: '/login',
+      initialRoute: '/screen1',
       routes: {
         '/login': (context) => LoginScreen(),
-        "/register": (context) => SignUpScreen(),
+        '/register': (context) => SignUpScreen(),
         '/home': (context) => MyBottomNavigationBar(),
-        '/screen1': (context) => HomeScreen(),
+        '/screen1': (context) => PropertyListScreen(),
         '/screen2': (context) => Screen2(),
         '/screen3': (context) => Screen3(),
         '/screen4': (context) => Screen4(),
