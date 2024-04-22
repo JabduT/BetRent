@@ -18,7 +18,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
     HomeScreen(),
     PropertyListScreen(),
     Screen2(),
-    Screen3(),
+    AddHouseRentScreen(),
     Screen4(),
   ];
 

@@ -1,6 +1,6 @@
 // controllers/userController.js
 
-const { User, validateUser } = require("../models/User");
+const { User, validateUser } = require("../models/user");
 const Joi = require("joi");
 const authentication=require("../middleware/authentication");
 // Create a new user
@@ -26,7 +26,6 @@ exports.Login = async (req, res) => {
   const { phoneNumber, PIN } = req.body;
 const user=await User.findOne({phoneNumber})
   const isMatch=await user.checkPIN(PIN, user.PIN)
-  console.log(isMatch);
     if (!isMatch) {
       return res.status(400).json({ message: 'In correct PIN' });
     }
