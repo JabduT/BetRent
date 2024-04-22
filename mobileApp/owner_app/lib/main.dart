@@ -27,8 +27,6 @@ class MyApp extends StatelessWidget {
         '/register': (context) => SignUpScreen(),
         '/home': (context) => OwnerBottomNavigationBar(),
         '/screen1': (context) => PropertyListScreen(),
-        '/screen2': (context) => Screen2(),
-        '/screen3': (context) => Screen3(),
         '/screen4': (context) => Screen4(),
       },
     );
