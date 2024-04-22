@@ -25,11 +25,12 @@ class Property {
     required this.price,
   });
 }
-
 class _PropertyListScreenState extends State<PropertyListScreen> {
   late List<Property> properties = [];
   late TextEditingController _searchController;
   String selectedType = '';
+  bool isLoading = false;
+  String errorMessage = '';
 
   // Define the list of filter options
   final List<String> filterOptions = [
@@ -64,6 +65,9 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
   }
 
   Future<void> fetchData() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       final response = await http.get(
         Uri.parse(
@@ -86,6 +90,7 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
                     price: data['price'],
                   ))
               .toList();
+          errorMessage = ''; // Clear error message if data is loaded successfully
         });
       } else {
         throw Exception('Failed to load properties: ${response.statusCode}');
@@ -93,14 +98,13 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
     } catch (e) {
       setState(() {
         properties = [];
+        errorMessage =
+            'Failed to load properties. Please check your internet connection and try again.';
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Failed to load properties. Please check your internet connection and try again.',
-          ),
-        ),
-      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -116,8 +120,7 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
       queryParams = '?q=${_searchController.text}';
     }
     if (selectedType.isNotEmpty) {
-      queryParams +=
-          '${_searchController.text.isEmpty ? '?' : '&'}type=$selectedType';
+      queryParams += '${_searchController.text.isEmpty ? '?' : '&'}type=$selectedType';
     }
     return queryParams;
   }
@@ -172,8 +175,7 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
                   child: Row(
                     children: filterOptions
                         .map((filter) => Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
                               child: FilterChip(
                                 label: Text(filter),
                                 selected: selectedType == filter,
@@ -193,17 +195,26 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
           ),
         ),
       ),
-      body: properties.isEmpty
+      body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: properties.length,
-              itemBuilder: (context, index) {
-                return PropertyListItem(property: properties[index]);
-              },
-            ),
+          : errorMessage.isNotEmpty
+              ? Center(
+                  child: Text(errorMessage),
+                )
+              : properties.isEmpty
+                  ? Center(
+                      child: Text('No data found.'),
+                    )
+                  : ListView.builder(
+                      itemCount: properties.length,
+                      itemBuilder: (context, index) {
+                        return PropertyListItem(property: properties[index]);
+                      },
+                    ),
     );
   }
 }
+
 
 class PropertyListScreen extends StatefulWidget {
   @override
