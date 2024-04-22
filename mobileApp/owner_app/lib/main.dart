@@ -8,7 +8,7 @@ import 'package:owner_app/screens/screen4.dart';
 import 'package:owner_app/screens/authentication/login.dart'; // Import the login screen
 
 void main() {
-  runApp(MyApp());
+  runApp(MyApp()); 
 }
 
 class MyApp extends StatelessWidget {
