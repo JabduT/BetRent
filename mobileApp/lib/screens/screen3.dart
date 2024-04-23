@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:owner_app/themes/colors.dart';
 import 'package:owner_app/widgets/bottom_bar_owner.dart';
 
 class AddHouseRentScreen extends StatefulWidget {
@@ -53,7 +54,7 @@ class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Add House Rent'),
-        // No back icon in the app bar
+        centerTitle: true, // Center the title
       ),
       body: PageView(
         controller: _pageController,
@@ -73,22 +74,67 @@ class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 50.0), // Move title down
           TextFormField(
-            decoration: InputDecoration(labelText: 'Post Title'),
+            decoration: InputDecoration(
+              labelText: 'Post Title',
+              filled: true,
+              fillColor: AppColors.primaryColor.withOpacity(0.1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0), // Add border radius
+              ),
+            ),
             // Implement validation and save logic here
           ),
+          SizedBox(height: 10.0),
           TextFormField(
-            decoration: InputDecoration(labelText: 'House Type'),
+            decoration: InputDecoration(
+              labelText: 'House Type',
+              filled: true,
+              fillColor: AppColors.primaryColor.withOpacity(0.1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
             // Implement validation and save logic here
           ),
+          SizedBox(height: 10.0),
           TextFormField(
-            decoration: InputDecoration(labelText: 'House Description'),
+            decoration: InputDecoration(
+              labelText: 'House Description',
+              filled: true,
+              fillColor: AppColors.primaryColor.withOpacity(0.1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
+            maxLines: 4, // Increase height
             // Implement validation and save logic here
           ),
           SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: _nextPage,
-            child: Text('Next'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: _previousPage,
+                color: Colors.white, // Set text color to white
+              ),
+              ElevatedButton(
+                onPressed: _nextPage,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor, // Change button color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0), // Add border radius
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0), // Add padding
+                ),
+                child: Text(
+                  'Next',
+                  style: TextStyle(color: Colors.white), // Set text color to white
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -101,31 +147,66 @@ class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 50.0), // Move title down
           TextFormField(
-            decoration: InputDecoration(labelText: 'Total Number of Rooms'),
+            decoration: InputDecoration(
+              labelText: 'Total Number of Rooms',
+              filled: true,
+              fillColor: AppColors.primaryColor.withOpacity(0.1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
             keyboardType: TextInputType.number,
             // Implement validation and save logic here
           ),
+          SizedBox(height: 10.0),
           TextFormField(
-            decoration: InputDecoration(labelText: 'Total Number of Bathrooms'),
+            decoration: InputDecoration(
+              labelText: 'Total Number of Bathrooms',
+              filled: true,
+              fillColor: AppColors.primaryColor.withOpacity(0.1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
             keyboardType: TextInputType.number,
             // Implement validation and save logic here
           ),
+          SizedBox(height: 10.0),
           TextFormField(
-            decoration: InputDecoration(labelText: 'Exact Location'),
+            decoration: InputDecoration(
+              labelText: 'Exact Location',
+              filled: true,
+              fillColor: AppColors.primaryColor.withOpacity(0.1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
             // Implement validation and save logic here
           ),
           SizedBox(height: 20.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
+              IconButton(
+                icon: Icon(Icons.arrow_back),
                 onPressed: _previousPage,
-                child: Text('Back'),
+                color: Colors.white, // Set text color to white
               ),
               ElevatedButton(
                 onPressed: _nextPage,
-                child: Text('Next'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor, // Change button color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
+                ),
+                child: Text(
+                  'Next',
+                  style: TextStyle(color: Colors.white), // Set text color to white
+                ),
               ),
             ],
           ),
@@ -136,16 +217,7 @@ class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
 
   Widget _buildFinalScreen() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('This is the final screen or add more fields here.'),
-          ElevatedButton(
-            onPressed: _previousPage,
-            child: Text('Back'),
-          ),
-        ],
-      ),
+      child: Text('This is the final screen or add more fields here.'),
     );
   }
 }
