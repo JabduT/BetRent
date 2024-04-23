@@ -9,9 +9,7 @@
 .history
 .svn/
 migrate_working_dir/
-*.properties
-
-local.properties
+.properties
 # IntelliJ related
 *.iml
 *.ipr
