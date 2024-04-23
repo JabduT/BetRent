@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:owner_app/widgets/my_bottom_navigation_bar.dart';
+import 'package:owner_app/widgets/bottom_bar_owner.dart';
 class AddHouseRentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class NextScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: MyBottomNavigationBar(), // Reusing the bottom nav bar
+      bottomNavigationBar: OwnerBottomNavigationBar(), // Reusing the bottom nav bar
     );
   }
 }
@@ -100,7 +100,7 @@ class FinalScreen extends StatelessWidget {
       body: Center(
         child: Text('This is the final screen or add more fields here.'),
       ),
-      bottomNavigationBar: MyBottomNavigationBar(), // Reusing the bottom nav bar
+      bottomNavigationBar: OwnerBottomNavigationBar(), // Reusing the bottom nav bar
     );
   }
 }
