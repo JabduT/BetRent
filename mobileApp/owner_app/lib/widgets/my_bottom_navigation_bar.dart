@@ -16,7 +16,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   final List<Widget> _screens = [
     HomeScreen(),
     Screen2(),
-    Screen3(),
+    AddHouseRentScreen(),
     Screen4(),
   ];
 
@@ -37,7 +37,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         // Change as needed
         items: const <Widget>[
           Icon(Icons.home, color: Colors.white, size: 30),
-           Icon(Icons.history, color: Colors.white, size: 30),
+          Icon(Icons.history, color: Colors.white, size: 30),
           Icon(Icons.add, color: Colors.white, size: 30),
           Icon(Icons.message, color: Colors.white, size: 30),
           Icon(Icons.notifications,

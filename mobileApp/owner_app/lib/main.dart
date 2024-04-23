@@ -22,12 +22,12 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/login',
       routes: {
-        '/login': (context) => LoginScreen(),
+       '/login': (context) => LoginScreen(),
         "/register": (context) => SignUpScreen(),
         '/home': (context) => MyBottomNavigationBar(),
         '/screen1': (context) => HomeScreen(),
         '/screen2': (context) => Screen2(),
-        '/screen3': (context) => Screen3(),
+        '/screen3': (context) => AddHouseRentScreen(),
         '/screen4': (context) => Screen4(),
       },
     );

@@ -26,7 +26,6 @@ exports.Login = async (req, res) => {
   const { phoneNumber, PIN } = req.body;
 const user=await User.findOne({phoneNumber})
   const isMatch=await user.checkPIN(PIN, user.PIN)
-  console.log(isMatch);
     if (!isMatch) {
       return res.status(400).json({ message: 'In correct PIN' });
     }
