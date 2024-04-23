@@ -318,12 +318,12 @@ class PropertyListItem extends StatelessWidget {
                           ? IconButton(
                               onPressed: onFavoriteTap,
                               icon: Icon(Icons.favorite),
-                              color: Colors.red,
+                              color: AppColors.secondaryColor,
                             )
                           : IconButton(
                               onPressed: onFavoriteTap,
                               icon: Icon(Icons.favorite_outline),
-                              color: Colors.red,
+                              color: AppColors.secondaryColor,
                             ),
                     ],
                   ),

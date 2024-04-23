@@ -9,7 +9,8 @@ import 'package:owner_app/themes/colors.dart';
 
 class RenterBottomNavigationBar extends StatefulWidget {
   @override
-  _RenterBottomNavigationBarState createState() => _RenterBottomNavigationBarState();
+  _RenterBottomNavigationBarState createState() =>
+      _RenterBottomNavigationBarState();
 }
 
 class _RenterBottomNavigationBarState extends State<RenterBottomNavigationBar> {
@@ -33,20 +34,29 @@ class _RenterBottomNavigationBarState extends State<RenterBottomNavigationBar> {
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: CurvedNavigationBar(
-        // Change as needed
-        items: const <Widget>[
-          Icon(Icons.home, color: Colors.white, size: 30),
-          Icon(Icons.favorite, color: Colors.white, size: 30),
-          Icon(Icons.message, color: Colors.white, size: 30),
+        items: <Widget>[
+          Icon(Icons.home,
+              color:
+                  _selectedIndex == 0 ? AppColors.secondaryColor : Colors.white,
+              size: 30),
+          Icon(Icons.favorite,
+              color:
+                  _selectedIndex == 1 ? AppColors.secondaryColor : Colors.white,
+              size: 30),
+          Icon(Icons.message,
+              color:
+                  _selectedIndex == 2 ? AppColors.secondaryColor : Colors.white,
+              size: 30),
           Icon(Icons.notifications,
-              color: Colors.white, size: 30), // Use notifications icon
+              color:
+                  _selectedIndex == 3 ? AppColors.secondaryColor : Colors.white,
+              size: 30),
         ],
-
         index: _selectedIndex,
         onTap: _onItemTapped,
         height: 60.0,
-        color:  AppColors.primaryColor,
-        buttonBackgroundColor:  AppColors.primaryColor,
+        color: AppColors.primaryColor,
+        buttonBackgroundColor: AppColors.primaryColor,
         backgroundColor: Colors.white,
         animationCurve: Curves.easeInOut,
         animationDuration: Duration(milliseconds: 600),
