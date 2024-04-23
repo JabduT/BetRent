@@ -94,6 +94,7 @@ function validateProperty(property) {
     files: Joi.array().items(Joi.string()).required(),
     price: Joi.number().min(0).required(),
     propertySize: Joi.number().min(0).required(),
+
   });
   return schema.validate(property);
 }

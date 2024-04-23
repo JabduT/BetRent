@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:owner_app/screens/authentication/register.dart';
+import 'package:owner_app/screens/renter/property_list_screen.dart';
 import 'package:owner_app/widgets/bottom_bar_owner.dart';
 import 'package:owner_app/screens/screen1.dart';
 import 'package:owner_app/screens/screen2.dart';
 import 'package:owner_app/screens/screen3.dart';
 import 'package:owner_app/screens/screen4.dart';
-import 'package:owner_app/screens/authentication/login.dart'; // Import the login screen
-import 'package:owner_app/screens/property_list_screen.dart';
+import 'package:owner_app/screens/authentication/login.dart';
 import 'package:owner_app/widgets/bottom_bar_renter.dart';
 
 void main() {
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      initialRoute: '/login',
+      initialRoute: '/owner_home',
       routes: {
         '/login': (context) => LoginScreen(),
         '/register': (context) => SignUpScreen(),
