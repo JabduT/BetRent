@@ -41,8 +41,8 @@ const propertySchema = new mongoose.Schema(
       maxlength: 2000,
     },
     propertySize: { type: Number },
-    roomNumber: { type: Number },
-    bedRoomNum: { type: Number },
+    numOfRoom: { type: Number },
+    numOfBathroom: { type: Number },
     address: {
       type: String,
       required: true,
@@ -87,8 +87,8 @@ function validateProperty(property) {
       )
       .default("House"),
     description: Joi.string().min(10).max(2000).required(),
-    roomNumber: Joi.number().integer().min(0).required(),
-    bedRoomNum: Joi.number().integer().min(0).required(),
+    numOfRoom: Joi.number().integer().min(0).required(),
+    numOfBathroom: Joi.number().integer().min(0).required(),
     address: Joi.string().min(10).max(1000).required(),
     userId: Joi.string().required(),
     files: Joi.array().items(Joi.string()).required(),
