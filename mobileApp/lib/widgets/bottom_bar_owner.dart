@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:owner_app/screens/property_list_screen.dart';
+import 'package:owner_app/screens/owner/my_property_list.dart';
 import 'package:owner_app/screens/screen1.dart';
 import 'package:owner_app/screens/screen2.dart';
 import 'package:owner_app/screens/screen3.dart';
@@ -17,7 +17,7 @@ class _OwnerBottomNavigationBarState extends State<OwnerBottomNavigationBar> {
 
   final List<Widget> _screens = [
     HomeScreen(),
-    PropertyListScreen(),
+    OwnerPropertyListScreen(),
     AddHouseRentScreen(),
     Screen2(),
     // Screen3(),

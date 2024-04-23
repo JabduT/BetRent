@@ -36,10 +36,9 @@ class LoginScreen extends StatelessWidget {
       await storage.write(
           key: 'token', value: jsonDecode(response.body)['token']);
       Map<String, dynamic> responseBody = jsonDecode(response.body);
-      String role = responseBody['user']
-          ['role']; // Assuming 'user' contains the role property
+      String role =
+          responseBody['user']['role']; // Assuming 'user' contains the role property
       print(role);
-      print("okay here");
       if (role == 'renter') {
         Navigator.pushReplacementNamed(context, '/renter_home');
       } else
