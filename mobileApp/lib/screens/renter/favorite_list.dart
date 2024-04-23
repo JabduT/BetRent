@@ -30,7 +30,7 @@ class Property {
       required this.favorite});
 }
 
-class _PropertyListScreenState extends State<PropertyListScreen> {
+class _FavoriteListScreenState extends State<FavoriteListScreen> {
   late List<Property> properties = [];
   late TextEditingController _searchController;
   String selectedType = '';
@@ -68,7 +68,7 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
   Future<void> getUserId() async {
     final storage = FlutterSecureStorage();
     final String? userData = await storage.read(key: 'user');
- 
+
     if (userData != null) {
       final user = jsonDecode(userData);
       userId = user['_id'];
@@ -90,13 +90,12 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
       final token = await storage.read(key: 'token');
       final response = await http.get(
         Uri.parse(
-          '${AppConstants.APIURL}/properties${_buildQueryParams()}',
+          '${AppConstants.APIURL}/favorites${_buildQueryParams()}',
         ),
         headers: <String, String>{
           'Authorization': 'Bearer $token', // Include token in the header
         },
       );
-
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body);
         setState(() {
@@ -269,9 +268,9 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
   }
 }
 
-class PropertyListScreen extends StatefulWidget {
+class FavoriteListScreen extends StatefulWidget {
   @override
-  _PropertyListScreenState createState() => _PropertyListScreenState();
+  _FavoriteListScreenState createState() => _FavoriteListScreenState();
 }
 
 class PropertyListItem extends StatelessWidget {
