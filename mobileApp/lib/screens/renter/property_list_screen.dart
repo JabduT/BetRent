@@ -25,6 +25,12 @@ class Property {
     required this.price,
   });
 }
+
+class PropertyListScreen extends StatefulWidget {
+  @override
+  _PropertyListScreenState createState() => _PropertyListScreenState();
+}
+
 class _PropertyListScreenState extends State<PropertyListScreen> {
   late List<Property> properties = [];
   late TextEditingController _searchController;
@@ -90,7 +96,8 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
                     price: data['price'],
                   ))
               .toList();
-          errorMessage = ''; // Clear error message if data is loaded successfully
+          errorMessage =
+              ''; // Clear error message if data is loaded successfully
         });
       } else {
         throw Exception('Failed to load properties: ${response.statusCode}');
@@ -120,7 +127,8 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
       queryParams = '?q=${_searchController.text}';
     }
     if (selectedType.isNotEmpty) {
-      queryParams += '${_searchController.text.isEmpty ? '?' : '&'}type=$selectedType';
+      queryParams +=
+          '${_searchController.text.isEmpty ? '?' : '&'}type=$selectedType';
     }
     return queryParams;
   }
@@ -128,70 +136,69 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(120),
-        child: AppBar(
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(60),
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  margin: EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            hintText: 'Search...',
-                            border: InputBorder.none,
-                          ),
-                          onSubmitted: (_) => search(),
+      appBar: AppBar(
+        title: Text('Property List'),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(120),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                margin: EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search...',
+                          border: InputBorder.none,
                         ),
+                        onSubmitted: (_) => search(),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: search,
-                      ),
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: search,
+                    ),
+                  ],
                 ),
-                SizedBox(height: 10),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: filterOptions
-                        .map((filter) => Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: FilterChip(
-                                label: Text(filter),
-                                selected: selectedType == filter,
-                                onSelected: (isSelected) {
-                                  setState(() {
-                                    selectedType = isSelected ? filter : '';
-                                  });
-                                  fetchData();
-                                },
-                              ),
-                            ))
-                        .toList(),
-                  ),
+              ),
+              SizedBox(height: 10),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: filterOptions
+                      .map((filter) => Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: FilterChip(
+                              label: Text(filter),
+                              selected: selectedType == filter,
+                              onSelected: (isSelected) {
+                                setState(() {
+                                  selectedType = isSelected ? filter : '';
+                                });
+                                fetchData();
+                              },
+                            ),
+                          ))
+                      .toList(),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -213,12 +220,6 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
                     ),
     );
   }
-}
-
-
-class PropertyListScreen extends StatefulWidget {
-  @override
-  _PropertyListScreenState createState() => _PropertyListScreenState();
 }
 
 class PropertyListItem extends StatelessWidget {
