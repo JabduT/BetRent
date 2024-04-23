@@ -6,19 +6,18 @@ import 'package:owner_app/screens/screen2.dart';
 import 'package:owner_app/screens/screen3.dart';
 import 'package:owner_app/screens/screen4.dart';
 
-class MyBottomNavigationBar extends StatefulWidget {
+class RenterBottomNavigationBar extends StatefulWidget {
   @override
-  _MyBottomNavigationBarState createState() => _MyBottomNavigationBarState();
+  _RenterBottomNavigationBarState createState() => _RenterBottomNavigationBarState();
 }
 
-class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
+class _RenterBottomNavigationBarState extends State<RenterBottomNavigationBar> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
     HomeScreen(),
     PropertyListScreen(),
     Screen2(),
-    AddHouseRentScreen(),
     Screen4(),
   ];
 
@@ -36,8 +35,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         // Change as needed
         items: const <Widget>[
           Icon(Icons.home, color: Colors.white, size: 30),
-          Icon(Icons.history, color: Colors.white, size: 30),
-          Icon(Icons.add, color: Colors.white, size: 30),
+          Icon(Icons.favorite, color: Colors.white, size: 30),
           Icon(Icons.message, color: Colors.white, size: 30),
           Icon(Icons.notifications,
               color: Colors.white, size: 30), // Use notifications icon
