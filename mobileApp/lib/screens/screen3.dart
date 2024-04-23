@@ -57,8 +57,8 @@ Widget build(BuildContext context) {
         child: Text(
           'Add House Rent',
           style: TextStyle(
-            fontSize: 24.0,
-            color: Colors.black,
+            fontSize: 26.0,
+            color: AppColors.primaryColor,
           ),
         ),
       ),
@@ -108,6 +108,7 @@ Widget build(BuildContext context) {
             // Implement validation and save logic here
           ),
           SizedBox(height: 10.0),
+
           TextFormField(
             decoration: InputDecoration(
               labelText: 'House Description',
@@ -121,16 +122,11 @@ Widget build(BuildContext context) {
             maxLines: 4, // Increase height
             // Implement validation and save logic here
           ),
+
           SizedBox(height: 20.0),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              if (_currentPage > 0) // Show back button if not on the first screen
-                IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: _previousPage,
-                  color: Colors.white, // Set text color to white
-                ),
               ElevatedButton(
                 onPressed: _nextPage,
                 style: ElevatedButton.styleFrom(
@@ -138,7 +134,7 @@ Widget build(BuildContext context) {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0), // Add border radius
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0), // Add padding
+                  padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
                 ),
                 child: Text(
                   'Next',
@@ -158,7 +154,6 @@ Widget build(BuildContext context) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 50.0), // Move title down
           TextFormField(
             decoration: InputDecoration(
               labelText: 'Total Number of Rooms',
@@ -166,6 +161,7 @@ Widget build(BuildContext context) {
               fillColor: AppColors.primaryColor.withOpacity(0.1),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide.none, // Remove border color
               ),
             ),
             keyboardType: TextInputType.number,
@@ -179,6 +175,8 @@ Widget build(BuildContext context) {
               fillColor: AppColors.primaryColor.withOpacity(0.1),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide.none, // Remove border color
+
               ),
             ),
             keyboardType: TextInputType.number,
@@ -192,19 +190,32 @@ Widget build(BuildContext context) {
               fillColor: AppColors.primaryColor.withOpacity(0.1),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide.none, // Remove border color
               ),
             ),
+            maxLines: 4, // Increase height
             // Implement validation and save logic here
           ),
+
           SizedBox(height: 20.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back),
+            ElevatedButton(
                 onPressed: _previousPage,
-                color: Colors.white, // Set text color to white
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor, // Change button color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
+                ),
+                child: Text(
+                  'Back',
+                  style: TextStyle(color: Colors.white), // Set text color to white
+                ),
               ),
+
               ElevatedButton(
                 onPressed: _nextPage,
                 style: ElevatedButton.styleFrom(
@@ -212,7 +223,7 @@ Widget build(BuildContext context) {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
+                  padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
                 ),
                 child: Text(
                   'Next',
@@ -226,9 +237,37 @@ Widget build(BuildContext context) {
     );
   }
 
-  Widget _buildFinalScreen() {
-    return Center(
-      child: Text('This is the final screen or add more fields here.'),
-    );
-  }
+Widget _buildFinalScreen() {
+  return SingleChildScrollView(
+    padding: EdgeInsets.all(20.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [ 
+        SizedBox(height: 20.0),
+       
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton(
+              onPressed: _previousPage,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                  padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
+              ),
+              child: Text(
+                'Back',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
 }
