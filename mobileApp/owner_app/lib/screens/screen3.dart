@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:owner_app/widgets/my_bottom_navigation_bar.dart';
 class AddHouseRentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,21 +18,11 @@ class AddHouseRentScreen extends StatelessWidget {
               // Implement validation and save logic here
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: 'House Type Description'),
+              decoration: InputDecoration(labelText: 'House Type'),
               // Implement validation and save logic here
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Total Number of Rooms'),
-              keyboardType: TextInputType.number,
-              // Implement validation and save logic here
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Total Number of Bathrooms'),
-              keyboardType: TextInputType.number,
-              // Implement validation and save logic here
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Exact Location'),
+              decoration: InputDecoration(labelText: 'House Description'),
               // Implement validation and save logic here
             ),
             SizedBox(height: 20.0),
@@ -53,7 +43,6 @@ class AddHouseRentScreen extends StatelessWidget {
   }
 }
 
-// Next Screen Widget to continue filling the form
 class NextScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -62,9 +51,56 @@ class NextScreen extends StatelessWidget {
         title: Text('Next Screen'),
         // No back icon in the app bar
       ),
-      body: Center(
-        child: Text('Continue filling the form here or add more fields.'),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Total Number of Rooms'),
+              keyboardType: TextInputType.number,
+              // Implement validation and save logic here
+            ),
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Total Number of Bathrooms'),
+              keyboardType: TextInputType.number,
+              // Implement validation and save logic here
+            ),
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Exact Location'),
+              // Implement validation and save logic here
+            ),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to the next screen to continue filling the form
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FinalScreen()),
+                );
+              },
+              child: Text('Next'),
+            ),
+          ],
+        ),
       ),
+      bottomNavigationBar: MyBottomNavigationBar(), // Reusing the bottom nav bar
+    );
+  }
+}
+
+class FinalScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Final Screen'),
+        // No back icon in the app bar
+      ),
+      body: Center(
+        child: Text('This is the final screen or add more fields here.'),
+      ),
+      bottomNavigationBar: MyBottomNavigationBar(), // Reusing the bottom nav bar
     );
   }
 }
