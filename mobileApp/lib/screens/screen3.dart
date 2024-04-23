@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:owner_app/themes/colors.dart';
 import 'package:owner_app/widgets/bottom_bar_owner.dart';
-
 class AddHouseRentScreen extends StatefulWidget {
   @override
   _AddHouseRentScreenState createState() => _AddHouseRentScreenState();
@@ -50,43 +49,52 @@ class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Add House Rent'),
-        centerTitle: true, // Center the title
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Padding(
+        padding: const EdgeInsets.only(top: 90.0), // Adjust top padding as needed
+        child: Text(
+          'Add House Rent',
+          style: TextStyle(
+            fontSize: 24.0,
+            color: Colors.black,
+          ),
+        ),
       ),
-      body: PageView(
-        controller: _pageController,
-        physics: NeverScrollableScrollPhysics(), // Disable swipe navigation
-        children: [
-          _buildFirstScreen(),
-          _buildSecondScreen(),
-          _buildFinalScreen(),
-        ],
-      ),
-    );
-  }
-
+      centerTitle: true, // Center the title horizontally
+      toolbarHeight: 120.0, 
+    ),
+    body: PageView(
+      controller: _pageController,
+      physics: NeverScrollableScrollPhysics(), // Disable swipe navigation
+      children: [
+        _buildFirstScreen(),
+        _buildSecondScreen(),
+        _buildFinalScreen(),
+      ],
+    ),
+  );
+}
   Widget _buildFirstScreen() {
     return SingleChildScrollView(
       padding: EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 50.0), // Move title down
           TextFormField(
             decoration: InputDecoration(
               labelText: 'Post Title',
               filled: true,
               fillColor: AppColors.primaryColor.withOpacity(0.1),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0), // Add border radius
-              ),
+                border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0), // Add border radius
+      borderSide: BorderSide.none, // Remove border color
+    ),
             ),
             // Implement validation and save logic here
           ),
-          SizedBox(height: 10.0),
+          SizedBox(height: 20.0),
           TextFormField(
             decoration: InputDecoration(
               labelText: 'House Type',
@@ -94,6 +102,7 @@ class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
               fillColor: AppColors.primaryColor.withOpacity(0.1),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide.none, // Remove border color
               ),
             ),
             // Implement validation and save logic here
@@ -106,6 +115,7 @@ class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
               fillColor: AppColors.primaryColor.withOpacity(0.1),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide.none, // Remove border color
               ),
             ),
             maxLines: 4, // Increase height
@@ -115,11 +125,12 @@ class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: _previousPage,
-                color: Colors.white, // Set text color to white
-              ),
+              if (_currentPage > 0) // Show back button if not on the first screen
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: _previousPage,
+                  color: Colors.white, // Set text color to white
+                ),
               ElevatedButton(
                 onPressed: _nextPage,
                 style: ElevatedButton.styleFrom(
