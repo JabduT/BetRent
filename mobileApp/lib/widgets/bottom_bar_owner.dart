@@ -5,6 +5,7 @@ import 'package:owner_app/screens/screen1.dart';
 import 'package:owner_app/screens/screen2.dart';
 import 'package:owner_app/screens/screen3.dart';
 import 'package:owner_app/screens/screen4.dart';
+import 'package:owner_app/themes/colors.dart';
 
 class OwnerBottomNavigationBar extends StatefulWidget {
   @override
@@ -48,8 +49,8 @@ class _OwnerBottomNavigationBarState extends State<OwnerBottomNavigationBar> {
         index: _selectedIndex,
         onTap: _onItemTapped,
         height: 60.0,
-        color: Color.fromRGBO(0, 39, 56, 1.0),
-        buttonBackgroundColor: Color.fromRGBO(0, 39, 56, 1.0),
+        color:  AppColors.primaryColor,
+        buttonBackgroundColor:  AppColors.primaryColor,
         backgroundColor: Colors.white,
         animationCurve: Curves.easeInOut,
         animationDuration: Duration(milliseconds: 600),
