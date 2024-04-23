@@ -6,6 +6,7 @@ const Joi = require("joi");
 const fs = require("fs");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
+const { Favorite } = require("../models/favorite");
 
 exports.createProperty = async (req, res) => {
   // Validate property input
@@ -110,8 +111,24 @@ exports.getAllProperties = async (req, res) => {
       .limiting()
       .paginatinating();
     const properties = await features.query.select();
-    // const properties = await Property.find();
-    res.json(properties);
+
+    const userId = req.user ? req.user : "6624c91d453343f7039cc087"; // req.user
+
+    const userFavorites = await Favorite.find({ userId });
+
+    // Create a map for faster lookup of favorite property IDs
+    const favoritePropertyIds = new Set(
+      userFavorites.map((favorite) => favorite.propertyId.toString())
+    );
+
+    // Add favorite flag to each property
+    const propertiesWithFavorites = properties.map((property) => {
+      const isFavorite = favoritePropertyIds.has(property._id.toString());
+      return { ...property.toObject(), favorite: isFavorite };
+    });
+
+    res.json(propertiesWithFavorites);
+    //res.json(properties);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

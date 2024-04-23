@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:owner_app/constants/url.dart';
 import 'package:owner_app/themes/colors.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Property {
+  final String id;
   final String title;
   final String type;
   final int roomNumber;
@@ -13,24 +15,28 @@ class Property {
   final String address;
   final List<String> files;
   final int price;
+  final bool favorite;
 
-  Property({
-    required this.title,
-    required this.type,
-    required this.roomNumber,
-    required this.bedRoomNum,
-    required this.propertySize,
-    required this.address,
-    required this.files,
-    required this.price,
-  });
+  Property(
+      {required this.id,
+      required this.title,
+      required this.type,
+      required this.roomNumber,
+      required this.bedRoomNum,
+      required this.propertySize,
+      required this.address,
+      required this.files,
+      required this.price,
+      required this.favorite});
 }
+
 class _PropertyListScreenState extends State<PropertyListScreen> {
   late List<Property> properties = [];
   late TextEditingController _searchController;
   String selectedType = '';
   bool isLoading = false;
   String errorMessage = '';
+  String userId = '';
 
   // Define the list of filter options
   final List<String> filterOptions = [
@@ -56,6 +62,17 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
     super.initState();
     _searchController = TextEditingController();
     fetchData();
+    getUserId();
+  }
+
+  Future<void> getUserId() async {
+    final storage = FlutterSecureStorage();
+    final String? userData = await storage.read(key: 'user');
+ 
+    if (userData != null) {
+      final user = jsonDecode(userData);
+      userId = user['_id'];
+    }
   }
 
   @override
@@ -69,10 +86,15 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
       isLoading = true;
     });
     try {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'token');
       final response = await http.get(
         Uri.parse(
           '${AppConstants.APIURL}/properties${_buildQueryParams()}',
         ),
+        headers: <String, String>{
+          'Authorization': 'Bearer $token', // Include token in the header
+        },
       );
 
       if (response.statusCode == 200) {
@@ -80,17 +102,19 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
         setState(() {
           properties = responseData
               .map((data) => Property(
-                    title: data['title'],
-                    type: data['type'],
-                    roomNumber: data['roomNumber'],
-                    bedRoomNum: data['bedRoomNum'],
-                    propertySize: data['propertySize'],
-                    address: data['address'],
-                    files: List<String>.from(data['files']),
-                    price: data['price'],
-                  ))
+                  id: data['_id'],
+                  title: data['title'],
+                  type: data['type'],
+                  roomNumber: data['roomNumber'],
+                  bedRoomNum: data['bedRoomNum'],
+                  propertySize: data['propertySize'],
+                  address: data['address'],
+                  files: List<String>.from(data['files']),
+                  price: data['price'],
+                  favorite: data['favorite']))
               .toList();
-          errorMessage = ''; // Clear error message if data is loaded successfully
+          errorMessage =
+              ''; // Clear error message if data is loaded successfully
         });
       } else {
         throw Exception('Failed to load properties: ${response.statusCode}');
@@ -108,6 +132,29 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
     }
   }
 
+  Future<void> addFavorite(String propertyId) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${AppConstants.APIURL}/favorites'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(<String, String>{
+          'userId': userId,
+          'propertyId': propertyId,
+        }),
+      );
+      if (response.statusCode == 201) {
+        // Favorite added successfully
+        print('Favorite added for property: $propertyId');
+      } else {
+        throw Exception('Failed to add favorite: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error adding favorite: $e');
+    }
+  }
+
   void search() {
     setState(() {
       fetchData();
@@ -120,7 +167,8 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
       queryParams = '?q=${_searchController.text}';
     }
     if (selectedType.isNotEmpty) {
-      queryParams += '${_searchController.text.isEmpty ? '?' : '&'}type=$selectedType';
+      queryParams +=
+          '${_searchController.text.isEmpty ? '?' : '&'}type=$selectedType';
     }
     return queryParams;
   }
@@ -175,7 +223,8 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
                   child: Row(
                     children: filterOptions
                         .map((filter) => Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
                               child: FilterChip(
                                 label: Text(filter),
                                 selected: selectedType == filter,
@@ -208,13 +257,17 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
                   : ListView.builder(
                       itemCount: properties.length,
                       itemBuilder: (context, index) {
-                        return PropertyListItem(property: properties[index]);
+                        return PropertyListItem(
+                          property: properties[index],
+                          onFavoriteTap: () {
+                            addFavorite(properties[index].id);
+                          },
+                        );
                       },
                     ),
     );
   }
 }
-
 
 class PropertyListScreen extends StatefulWidget {
   @override
@@ -223,8 +276,10 @@ class PropertyListScreen extends StatefulWidget {
 
 class PropertyListItem extends StatelessWidget {
   final Property property;
+  final VoidCallback? onFavoriteTap;
 
-  const PropertyListItem({Key? key, required this.property}) : super(key: key);
+  const PropertyListItem({Key? key, required this.property, this.onFavoriteTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -251,9 +306,26 @@ class PropertyListItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    property.title,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        property.title,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      property.favorite
+                          ? IconButton(
+                              onPressed: onFavoriteTap,
+                              icon: Icon(Icons.favorite),
+                              color: AppColors.secondaryColor,
+                            )
+                          : IconButton(
+                              onPressed: onFavoriteTap,
+                              icon: Icon(Icons.favorite_outline),
+                              color: AppColors.secondaryColor,
+                            ),
+                    ],
                   ),
                   SizedBox(height: 4),
                   Text('${property.address}'),
@@ -298,7 +370,6 @@ class PropertyListItem extends StatelessWidget {
                         child: Text('${property.price} BIRR'),
                       ),
                       SizedBox(width: 4),
-                      Icon(Icons.favorite_outline),
                     ],
                   ),
                 ],
@@ -306,7 +377,8 @@ class PropertyListItem extends StatelessWidget {
             ),
             SizedBox(width: 16),
             Image.network(
-              'http://localhost/api/${property.files.first}', // Assuming the API serves images from the same base URL
+              'http://localhost/api/${property.files.first}',
+              // Assuming the API serves images from the same base URL
               width: 100,
               height: 100,
               fit: BoxFit.cover,

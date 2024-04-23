@@ -7,25 +7,51 @@ import 'package:owner_app/screens/authentication/register.dart';
 import 'package:owner_app/screens/screen1.dart';
 import 'package:owner_app/themes/colors.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
+  @override
+  _SignUpScreenState createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController pinController = TextEditingController();
   final TextEditingController confirmPinController = TextEditingController();
+  String selectedRole = 'renter'; // Default role
 
   Future<void> signUpUser(BuildContext context) async {
     // Get user input
     String phoneNumber = phoneController.text.trim();
     String pin = pinController.text.trim();
+    String confirmPin = confirmPinController.text.trim();
+
+    // Check if PIN and confirmed PIN match
+    if (pin != confirmPin) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('PIN Mismatch'),
+          content: Text('The PINs entered do not match. Please try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return; // Exit the function early
+    }
 
     // Send POST request to signUp API
     final response = await http.post(
-      Uri.parse('${AppConstants.APIURL}/users'),
+      Uri.parse('${AppConstants.APIURL}/users/create'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
       body: jsonEncode(<String, String>{
         'phoneNumber': '+251$phoneNumber',
         'PIN': pin,
+        'role': selectedRole, // Include the selected role
       }),
     );
 
@@ -33,12 +59,22 @@ class SignUpScreen extends StatelessWidget {
     print('Response status code: ${response.statusCode}');
     print('Response body: ${response.body}');
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final storage = FlutterSecureStorage();
       await storage.write(
           key: 'token', value: jsonDecode(response.body)['token']);
 
-      Navigator.pushReplacementNamed(context, '/home');
+      // Save the user object locally
+      final userJson = jsonEncode(jsonDecode(response.body)['user']);
+      await storage.write(key: 'user', value: userJson);
+
+      Map<String, dynamic> responseBody = jsonDecode(response.body);
+      String role = responseBody['user']['role'];
+      print(role);
+      if (role == 'renter') {
+        Navigator.pushReplacementNamed(context, '/renter_home');
+      } else
+        Navigator.pushReplacementNamed(context, '/owner_home');
     } else {
       // If signUp fails, show error message
       showDialog(
@@ -166,33 +202,37 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(height: 20),
+            // Role Selection Dropdown
+            DropdownButtonFormField<String>(
+              value: selectedRole,
+              onChanged: (value) {
+                setState(() {
+                  selectedRole = value!;
+                });
+              },
+              items: <String>['renter', 'landlord']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              decoration: InputDecoration(
+                labelText: 'Role',
+                filled: true,
+                fillColor:
+                    AppColors.primaryColor.withOpacity(0.3), // 30% opacity
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none, // No border
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+            ),
             SizedBox(height: 30),
             // SignUp Button
             ElevatedButton(
-              onPressed: () {
-                // Check if PIN and confirmed PIN match
-                if (pinController.text.trim() ==
-                    confirmPinController.text.trim()) {
-                  // If they match, proceed with signup
-                  signUpUser(context);
-                } else {
-                  // If they don't match, show an error message
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('PIN Mismatch'),
-                      content: Text(
-                          'The PINs entered do not match. Please try again.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              },
+              onPressed: () => signUpUser(context),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
                   AppColors.primaryColor,
@@ -202,7 +242,7 @@ class SignUpScreen extends StatelessWidget {
                 'Sign Up',
                 style: TextStyle(
                   height: 3.5,
-                  fontWeight: FontWeight.bold, // Bold font weight
+                  fontWeight: FontWeight.bold, // Bold font wei
                   color: Colors.white, // Primary color
                 ),
               ),
@@ -248,7 +288,8 @@ class SignUpScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: AppColors.primaryColor), // Primary color border
+                    color: AppColors.primaryColor,
+                  ), // Primary color border
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: Center(
