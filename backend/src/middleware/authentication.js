@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const bcrypt = require("bcrypt");
+const { User } = require("../models/user");
 
 signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET_KEY , {
@@ -35,8 +36,10 @@ signToken = (id) => {
 // protect controller for authorization
 exports.authenticate = async (req, res, next) => {
   let token;
+  console.log('upper',token)
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
+    console.log(token)
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
