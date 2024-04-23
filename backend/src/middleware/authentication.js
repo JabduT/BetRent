@@ -24,7 +24,7 @@ signToken = (id) => {
   if (process.env.NODE_ENV === 'production') {
     cookieOptions.secure = true;
   }
-  res.cookie('jwt', token, cookieOptions);
+  // res.cookie('jwt', token, cookieOptions);
   res.status(statusCode).json({
     status: 'success',
     token,
