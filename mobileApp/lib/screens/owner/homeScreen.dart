@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:owner_app/screens/screen3.dart';
+import 'package:owner_app/screens/owner/addHouse.dart';
 import 'package:owner_app/themes/colors.dart';
 class HomeScreen extends StatelessWidget {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -178,14 +178,6 @@ class HomeScreen extends StatelessWidget {
       child: InkWell(
       onTap: () {
           // If it's an Icon widget, perform specific actions based on the icon
-          if (iconData==Icons.add) {
-            AddHouseRentScreen();
-          } else if(iconData==Icons.message) {
-            AddHouseRentScreen();
-          }
-        else if(iconData==Icons.house){
-            AddHouseRentScreen();
-        } 
       },
     
         child: Padding(
