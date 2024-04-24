@@ -2,39 +2,23 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
- import 'package:owner_app/constants/url.dart';
+import 'package:owner_app/constants/url.dart';
+
 class Profile extends StatelessWidget {
-  // Future<Map<String, dynamic>> fetchProfile() async {
-  //   final response = await http.get(Uri.parse('${AppConstants.APIURL}/users/profile'));
-
-  //   if (response.statusCode == 200) {
-  //     print(response.body);
-  //     return jsonDecode(response.body);
-  //   } else {
-  //     throw Exception('Failed to load profile');
-  //   }
-  // }
-
-  @override
-  void dispose() {
-  }
-
- Future<Map<String, dynamic>>fetchProfile() async {
-    try
-     {
+  Future<Map<String, dynamic>> fetchProfile() async {
+    try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'token');
-       final response = await http.get(Uri.parse('${AppConstants.APIURL}/users/profile'));
-        headers: <String, String>{
-          'Authorization': 'Bearer $token'}; // Include token in the header 
-        print(response.body);
-         return jsonDecode(response.body);
-
+      final response = await http.get(Uri.parse('${AppConstants.APIURL}/user/profile'),
+          headers: <String, String>{
+            'Authorization': 'Bearer $token',
+          });
+      print(response.body);
+      return jsonDecode(response.body);
+    } catch (error) {
+      throw Exception('Failed to load profile');
     }
-    catch (error) {
-       throw Exception('Failed to load profile');
-      };
-    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,27 +35,31 @@ class Profile extends StatelessWidget {
           );
         } else if (snapshot.hasData) {
           final profileData = snapshot.data!;
+          final fullName = profileData['name'] as String;
+          final userEmail = profileData['email'] as String;
+          final userPhone = profileData['phone'] as String;
+          // Assuming 'userImageURL' is the URL of the user's profile image
+          final userImageURL = profileData['profile_image'] as String;
+
           return Scaffold(
             appBar: AppBar(
-              title: Text('Owner Home'),
+              title: Text('My Profile'),
             ),
             body: SingleChildScrollView(
               padding: EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'My Profile:',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
+                  Center(
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(userImageURL),
                     ),
                   ),
                   SizedBox(height: 20.0),
-                  Text('Name: ${profileData['name']}'),
-                  Text('Email: ${profileData['email']}'),
-                  Text('Phone: ${profileData['phone']}'),
-                  // Add more profile details as needed
+                  _buildProfileItem('Name', fullName, Icons.edit),
+                  _buildProfileItem('Email', userEmail, Icons.edit),
+                  _buildProfileItem('Phone', userPhone, Icons.edit),
                 ],
               ),
             ),
@@ -82,6 +70,20 @@ class Profile extends StatelessWidget {
           );
         }
       },
+    );
+  }
+
+  Widget _buildProfileItem(String title, String value, IconData iconData) {
+    return ListTile(
+      title: Text(title),
+      subtitle: Text(value),
+      trailing: IconButton(
+        icon: Icon(iconData),
+        onPressed: () {
+          // Handle edit action for the profile item
+          // For example, navigate to EditProfileScreen with the specific item to edit
+        },
+      ),
     );
   }
 }
