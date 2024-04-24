@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:owner_app/screens/common/profile.dart';
 import 'package:owner_app/screens/owner/addHouse.dart';
 import 'package:owner_app/themes/colors.dart';
 import 'package:owner_app/widgets/bottom_bar_owner.dart';
@@ -188,7 +189,16 @@ class HomeScreen extends StatelessWidget {
           // Handle Messaging feature
         } else if (iconData == Icons.house) {
           // Handle My houses feature
-        }      },
+        }  
+        else if(iconData==Icons.person){
+          print('hello');
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Profile ()),
+  );
+
+        }
+            },
     
         child: Padding(
           padding: EdgeInsets.all(16.0),
