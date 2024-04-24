@@ -83,7 +83,8 @@ class LoginScreen extends StatelessWidget {
                 "Login to your account",
                 style: TextStyle(
                   fontWeight: FontWeight.bold, // Bold font weight
-                  color: AppColors.primaryColor, // Primary color
+                  color: AppColors.primaryColor,
+                   // Primary color
                 ),
               ),
             ),
