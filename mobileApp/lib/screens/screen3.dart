@@ -7,13 +7,33 @@ class AddHouseRentScreen extends StatefulWidget {
 }
 
 class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
+  // Define a list of property types
+List<String> propertyTypes = [
+  "Apartment",
+  "Condo",
+  "House",
+  "Studio Apartment",
+  "Villa",
+  "Bedsitter",
+  "Block of Flats",
+  "Chalet",
+  "Duplex",
+  "Farm House",
+  "Mansion",
+  "Penthouse",
+  "Room & Parlour",
+  "Shared Apartment",
+  "Townhouse / Terrace",
+];
+  late String _selectedType; // Declare _selectedType
   late PageController _pageController;
   int _currentPage = 0;
-
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentPage);
+    _selectedType = propertyTypes[0]; // Initialize _selectedType here
+
   }
 
   @override
@@ -95,20 +115,31 @@ Widget build(BuildContext context) {
             // Implement validation and save logic here
           ),
           SizedBox(height: 20.0),
-          TextFormField(
+
+          DropdownButtonFormField<String>(
+            value: _selectedType,
+            onChanged: (value) {
+              setState(() {
+                _selectedType = value!;
+              });
+            },
+            items: propertyTypes.map((type) {
+              return DropdownMenuItem<String>(
+                value: type,
+                child: Text(type),
+              );
+            }).toList(),
             decoration: InputDecoration(
-              labelText: 'House Type',
+              labelText: 'Type',
               filled: true,
-              fillColor: AppColors.primaryColor.withOpacity(0.1),
+              fillColor: Colors.blue.withOpacity(0.1),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide.none, // Remove border color
+                borderSide: BorderSide.none,
               ),
             ),
-            // Implement validation and save logic here
           ),
           SizedBox(height: 10.0),
-
           TextFormField(
             decoration: InputDecoration(
               labelText: 'House Description',
@@ -168,20 +199,19 @@ Widget build(BuildContext context) {
             // Implement validation and save logic here
           ),
           SizedBox(height: 10.0),
-          TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Total Number of Bathrooms',
-              filled: true,
-              fillColor: AppColors.primaryColor.withOpacity(0.1),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none, // Remove border color
-
-              ),
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Price',
+            filled: true,
+            fillColor: AppColors.primaryColor.withOpacity(0.1),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide.none, // Remove border color
             ),
-            keyboardType: TextInputType.number,
-            // Implement validation and save logic here
           ),
+          keyboardType: TextInputType.number,
+          // Implement validation and save logic here
+        ),
           SizedBox(height: 10.0),
           TextFormField(
             decoration: InputDecoration(
@@ -242,9 +272,37 @@ Widget _buildFinalScreen() {
     padding: EdgeInsets.all(20.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [ 
+      children: [
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Property Size (sqft)',
+            filled: true,
+            fillColor: AppColors.primaryColor.withOpacity(0.1),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide.none, // Remove border color
+            ),
+          ),
+          keyboardType: TextInputType.number,
+          // Implement validation and save logic here
+        ),
         SizedBox(height: 20.0),
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Price',
+            filled: true,
+            fillColor: AppColors.primaryColor.withOpacity(0.1),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide.none, // Remove border color
+            ),
+          ),
+          keyboardType: TextInputType.number,
+          // Implement validation and save logic here
+        ),
        
+       
+        SizedBox(height: 20.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -255,19 +313,35 @@ Widget _buildFinalScreen() {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                  padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
+                padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
               ),
               child: Text(
                 'Back',
                 style: TextStyle(color: Colors.white),
               ),
             ),
-
+            Expanded(
+              child: ElevatedButton(
+                onPressed: _nextPage,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
+                ),
+                child: Text(
+                  'Next',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
           ],
         ),
       ],
     ),
   );
 }
+
 
 }
