@@ -45,21 +45,17 @@ class _OwnerBottomNavigationBarState extends State<OwnerBottomNavigationBar> {
               color:
                   _selectedIndex == 1 ? AppColors.secondaryColor : Colors.white,
               size: 30),
-          Icon(Icons.history,
-              color:
-                  _selectedIndex == 1 ? AppColors.secondaryColor : Colors.white,
-              size: 30),
           Icon(Icons.add,
-              color:
-                  _selectedIndex == 1 ? AppColors.secondaryColor : Colors.white,
-              size: 30),
-          Icon(Icons.message,
               color:
                   _selectedIndex == 2 ? AppColors.secondaryColor : Colors.white,
               size: 30),
-          Icon(Icons.notifications,
+          Icon(Icons.message,
               color:
                   _selectedIndex == 3 ? AppColors.secondaryColor : Colors.white,
+              size: 30),
+          Icon(Icons.notifications,
+              color:
+                  _selectedIndex == 4 ? AppColors.secondaryColor : Colors.white,
               size: 30),
         ],
         index: _selectedIndex,

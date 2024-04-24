@@ -28,8 +28,8 @@ class LoginScreen extends StatelessWidget {
     );
 
     // Log response
-    print('Response status code: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    // print('Response status code: ${response.statusCode}');
+    // print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       final storage = FlutterSecureStorage();

@@ -5,7 +5,7 @@ class HomeScreen extends StatelessWidget {
   Future<String?> getToken() async {
     final storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'token');
-    print('Token: $token'); // Log the token
+  //  print('Token: $token'); // Log the token
     return token;
   }
 

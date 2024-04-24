@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:owner_app/constants/url.dart';
@@ -52,35 +53,52 @@ String _selectedPriceType = 'Per Day'; // Default selection
   }
 
 
-  Future<void> _submitHouse() async {
-    // Prepare the data to be sent in the POST request
-    Map<String, dynamic> postData = {
-      'title': _titleController.text,
-      'type': _selectedType,
-      'description': _descriptionController.text,
-      'price': _price,
-      'priceType': _selectedPriceType,
-      'numOfRooms': _roomController.text,
-      'exactLocation': _exactLocationController.text,
-      'propertySize': _propertySize,
-      'imageFiles': _imageFiles.map((file) => file.path).toList(),
-    };
-      // Make the HTTP POST request
-    var response = await http.post(
-      Uri.parse('${AppConstants.APIURL}/houses'),
-      body: postData,
-    );
-
-    // Check the response status
-    if (response.statusCode == 200) {
-      // Handle successful submission
-      // You can show a success message or navigate to a success page
-      print('House submitted successfully');
-    } else {
-      // Handle error
-      print('Error submitting house: ${response.body}');
-    }
+Future<void> _submitHouse() async {
+  // Validate input data
+  if (_titleController.text.isEmpty ||
+      _descriptionController.text.isEmpty ||
+      _roomController.text.isEmpty ||
+      _exactLocationController.text.isEmpty ||
+      _price.isEmpty ||
+      _propertySize.isEmpty ||
+      _imageFiles.isEmpty) {
+    print('Please fill in all required fields');
+    return;
   }
+
+  // Prepare the data to be sent in the POST request
+  Map<String, dynamic> postData = {
+    'title': _titleController.text,
+    'type': _selectedType,
+    'description': _descriptionController.text,
+    'price': _price,
+    'priceType': _selectedPriceType,
+    'numOfRooms': _roomController.text,
+    'exactLocation': _exactLocationController.text,
+    'propertySize': _propertySize,
+    'imageFiles': _imageFiles.map((file) => file.path).toList(),
+  };
+ print(postData);
+  // Make the HTTP POST request
+  var response = await http.post(
+    Uri.parse('${AppConstants.APIURL}/houses'),
+    headers: <String, String>{
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode(postData), // Convert postData to JSON format
+  );
+
+  // Check the response status
+  if (response.statusCode == 200) {
+    // Handle successful submission
+    // You can show a success message or navigate to a success page
+    print('House submitted successfully');
+  } else {
+    // Handle error
+    print('Error submitting house: ${response.body}');
+  }
+}
+
 
 
   @override
@@ -374,7 +392,7 @@ Widget _buildFinalScreen() {
         children: [
           TextFormField(
             decoration: InputDecoration(
-              labelText: 'Property Size (sqft)',
+              labelText: 'house Size (sqft)',
               filled: true,
               fillColor: AppColors.primaryColor.withOpacity(0.1),
               border: OutlineInputBorder(
@@ -390,32 +408,50 @@ Widget _buildFinalScreen() {
             },
             // Implement validation and save logic here
           ),
-          SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: _pickImage,
-            child: Text('Upload Image'),
-          ),
-          SizedBox(height: 10.0),
-          _imageFiles.isEmpty
-              ? Container()
-              : SizedBox(
-                  height: 100.0,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _imageFiles.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: EdgeInsets.only(right: 10.0),
-                        child: Image.file(
-                          _imageFiles[index],
-                          width: 100.0,
-                          height: 100.0,
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    },
-                  ),
-                ),
+          SizedBox(height: 40.0),
+ElevatedButton(
+  onPressed: _pickImage,
+  style: ElevatedButton.styleFrom(
+    backgroundColor:Colors.white, // Change button color if needed
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(4.0), // Add border radius
+    ),
+    padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 90.0), // Adjust padding as needed
+  ),
+  child: Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(Icons.upload_outlined), // Add upload icon
+      SizedBox(width: 15.0), // Add spacing between icon and text
+      Text(
+        'Upload Image',
+        style: TextStyle(fontSize: 16.0), // Adjust font size as needed
+      ),
+    ],
+  ),
+),
+SizedBox(height: 10.0), // Add vertical spacing
+_imageFiles.isEmpty
+    ? Container()
+    : SizedBox(
+        height: 150.0, // Increase height for larger image preview
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: _imageFiles.length,
+          itemBuilder: (context, index) {
+            return Container(
+              margin: EdgeInsets.only(right: 10.0),
+              child: Image.file(
+                _imageFiles[index],
+                width: 150.0, // Increase width for larger image preview
+                height: 150.0, // Increase height for larger image preview
+                fit: BoxFit.cover,
+              ),
+            );
+          },
+        ),
+      ),
+
           SizedBox(height: 20.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
