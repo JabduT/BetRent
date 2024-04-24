@@ -179,9 +179,7 @@ class HomeScreen extends StatelessWidget {
       elevation: 2.0,
       child: InkWell(
       onTap: () {
-        // Handle feature tap based on the iconData passed
         if (iconData == Icons.add) {
-          // Example: Navigate to AddHouseRentScreen for the Add house feature
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AddHouseRentScreen()),
