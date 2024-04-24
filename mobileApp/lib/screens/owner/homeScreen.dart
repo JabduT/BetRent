@@ -34,6 +34,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+
+
   Widget _buildHomePageContent(BuildContext context) {
   return Scaffold(
     key: _scaffoldKey,
@@ -191,7 +193,6 @@ class HomeScreen extends StatelessWidget {
           // Handle My houses feature
         }  
         else if(iconData==Icons.person){
-          print('hello');
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => Profile ()),

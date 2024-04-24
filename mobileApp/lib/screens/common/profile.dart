@@ -1,17 +1,40 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
  import 'package:owner_app/constants/url.dart';
 class Profile extends StatelessWidget {
-  Future<Map<String, dynamic>> fetchProfile() async {
-    final response = await http.get(Uri.parse('${AppConstants.APIURL}/users/profile'));
-    if (response.statusCode == 200) {
-      print(response.body);
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load profile');
-    }
+  // Future<Map<String, dynamic>> fetchProfile() async {
+  //   final response = await http.get(Uri.parse('${AppConstants.APIURL}/users/profile'));
+
+  //   if (response.statusCode == 200) {
+  //     print(response.body);
+  //     return jsonDecode(response.body);
+  //   } else {
+  //     throw Exception('Failed to load profile');
+  //   }
+  // }
+
+  @override
+  void dispose() {
   }
+
+ Future<Map<String, dynamic>>fetchProfile() async {
+    try
+     {
+      final storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'token');
+       final response = await http.get(Uri.parse('${AppConstants.APIURL}/users/profile'));
+        headers: <String, String>{
+          'Authorization': 'Bearer $token'}; // Include token in the header 
+        print(response.body);
+         return jsonDecode(response.body);
+
+    }
+    catch (error) {
+       throw Exception('Failed to load profile');
+      };
+    }
 
   @override
   Widget build(BuildContext context) {

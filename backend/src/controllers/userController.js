@@ -60,11 +60,13 @@ exports.getAllUsers = async (req, res) => {
 
 
 exports.getMe =async (req, res, next) => {
+  console.log('get me');
   req.params.userId = req.user.id;
   next();
 };
 // Get user by ID
 exports.getUserById = async (req, res) => {
+  console.log('get user');
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
