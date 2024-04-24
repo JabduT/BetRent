@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:owner_app/screens/screen4.dart';
+import 'package:owner_app/screens/common/messaging.dart';
 
 class Screen2 extends StatelessWidget {
   @override

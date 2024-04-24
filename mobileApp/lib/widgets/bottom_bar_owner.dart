@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:owner_app/screens/owner/my_property_list.dart';
 import 'package:owner_app/screens/owner/homeScreen.dart';
-import 'package:owner_app/screens/screen2.dart';
+import 'package:owner_app/screens/common/notification.dart';
 import 'package:owner_app/screens/owner/addHouse.dart';
-import 'package:owner_app/screens/screen4.dart';
+import 'package:owner_app/screens/common/messaging.dart';
 import 'package:owner_app/themes/colors.dart';
 
 class OwnerBottomNavigationBar extends StatefulWidget {
