@@ -1,4 +1,4 @@
-# BetRebt App
+# BetRent App
 
 A new Flutter project.
 
