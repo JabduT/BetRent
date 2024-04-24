@@ -41,17 +41,24 @@ const propertySchema = new mongoose.Schema(
       maxlength: 2000,
     },
     propertySize: { type: Number },
-    numOfRoom: { type: Number },
-    numOfBathroom: { type: Number },
-    address: {
+    numOfRooms: { type: Number },
+    numOfBathrooms: { type: Number },
+    exactLocation: {
       type: String,
       required: true,
       minlength: 10,
       maxlength: 1000,
     },
-    files: {
+    imageFiles: {
       type: [String],
       required: true,
+    },
+    priceType: {
+      type: String,
+      enum: [
+        "Per Day",
+        "Per month",
+        "per year"]
     },
     price: {
       type: Number,
@@ -92,7 +99,9 @@ function validateProperty(property) {
     address: Joi.string().min(10).max(1000).required(),
     userId: Joi.string().required(),
     files: Joi.array().items(Joi.string()).required(),
-    price: Joi.number().min(0).required(),
+    pricePerDay: Joi.number().min(0).required(),
+    pricePerMonth: Joi.number().min(0).required(),
+    pricePerYear: Joi.number().min(0).required(),
     propertySize: Joi.number().min(0).required(),
 
   });
