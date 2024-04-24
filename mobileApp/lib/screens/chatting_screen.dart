@@ -1,109 +1,83 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:owner_app/constants/url.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChattingScreen extends StatefulWidget {
-  final String receiverId; // Add receiverId as a parameter
+  final String recipientUserId;
 
-  ChattingScreen({required this.receiverId});
+  ChattingScreen({required this.recipientUserId});
 
   @override
   _ChattingScreenState createState() => _ChattingScreenState();
 }
 
 class _ChattingScreenState extends State<ChattingScreen> {
-  TextEditingController _controller = TextEditingController();
-  late IO.Socket socket;
-  List<String> messages = [];
-  String? userId; // Variable to store the user's ID
-  String? roomId; // Variable to store the room ID
-  final String baseUrl =
-      AppConstants.APIURL; // Use AppConstants for the base URL
+ late IO.Socket socket;
+  TextEditingController messageController = TextEditingController();
+  List<Map<String, String>> messages = [];
 
   @override
   void initState() {
     super.initState();
-    initializeSocket();
-    getUserInfo();
-  }
 
-  // Function to initialize Socket.IO connection
-  void initializeSocket() {
-    socket = IO.io(baseUrl, <String, dynamic>{
+    // Connect to the server
+    socket = IO.io(AppConstants.BASEURL, <String, dynamic>{
       'transports': ['websocket'],
-      'autoConnect': false,
     });
-    socket.connect();
-    // Listen for incoming messages
-    socket.on('private message', (data) {
+
+    // Listen for messages from the server
+    socket.on('message', (data) {
       setState(() {
-        messages.add(data);
+        messages.add({'sender': 'Server', 'message': data});
       });
     });
   }
 
-  // Function to retrieve user information from storage
-  Future<void> getUserInfo() async {
-    final storage = FlutterSecureStorage();
-    final String? userData = await storage.read(key: 'user');
+  @override
+  void dispose() {
+    // Close the socket when the screen is disposed
+    socket.dispose();
+    super.dispose();
+  }
 
-    if (userData != null) {
-      final user = jsonDecode(userData);
-      userId = user['_id'];
-    }
-
-    // Join chat room after getting user ID
-    if (userId != null && widget.receiverId != null) {
-      socket.emit(
-          'join room', {'senderId': userId, 'receiverId': widget.receiverId});
-    }
+  void sendMessage(String message) {
+    // Send message to the server
+    socket.emit('message', {'recipientUserId': '6628dbaa509f3d7b0e0e4cad', 'message': message});
+    // Add the user's own message to the UI
+    setState(() {
+      messages.add({'sender': 'You', 'message': message});
+    });
+    // Clear the input field after sending the message
+    messageController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chatting'),
+        title: Text('Chat with User 6628dbaa509f3d7b0e0e4cad'),
       ),
       body: Column(
-        children: [
+        children: <Widget>[
           Expanded(
             child: ListView.builder(
               itemCount: messages.length,
               itemBuilder: (context, index) {
+                final message = messages[index];
                 return ListTile(
-                  title: Align(
-                    alignment: messages[index].startsWith('You: ')
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: messages[index].startsWith('You: ')
-                            ? Colors.blue
-                            : Colors.green,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        messages[index],
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
+                  title: Text(message['message']!),
+                  subtitle: Text(message['sender']!),
                 );
               },
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Row(
-              children: [
+              children: <Widget>[
                 Expanded(
                   child: TextField(
-                    controller: _controller,
+                    controller: messageController,
                     decoration: InputDecoration(
                       hintText: 'Enter your message...',
                     ),
@@ -112,18 +86,9 @@ class _ChattingScreenState extends State<ChattingScreen> {
                 IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () {
-                    // Send message when the send button is pressed
-                    if (_controller.text.isNotEmpty && userId != null) {
-                      socket.emit('private message', {
-                        'text': 'You: ${_controller.text}',
-                        'senderId': userId,
-                        'receiverId': widget.receiverId,
-                        'roomId': roomId,
-                      });
-                      setState(() {
-                        messages.add('You: ${_controller.text}');
-                      });
-                      _controller.clear();
+                    String message = messageController.text;
+                    if (message.isNotEmpty) {
+                      sendMessage(message);
                     }
                   },
                 ),
@@ -133,11 +98,5 @@ class _ChattingScreenState extends State<ChattingScreen> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    socket.disconnect();
-    super.dispose();
   }
 }
