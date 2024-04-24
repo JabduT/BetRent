@@ -3,29 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:owner_app/constants/url.dart';
+import 'package:owner_app/models/property.dart';
 import 'package:owner_app/themes/colors.dart';
-
-class Property {
-  final String title;
-  final String type;
-  final int roomNumber;
-  final int bedRoomNum;
-  final int propertySize;
-  final String address;
-  final List<String> files;
-  final int price;
-
-  Property({
-    required this.title,
-    required this.type,
-    required this.roomNumber,
-    required this.bedRoomNum,
-    required this.propertySize,
-    required this.address,
-    required this.files,
-    required this.price,
-  });
-}
 
 class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
   late List<Property> properties = [];
@@ -83,15 +62,17 @@ class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
           setState(() {
             properties = responseData
                 .map((data) => Property(
-                      title: data['title'],
-                      type: data['type'],
-                      roomNumber: data['roomNumber'],
-                      bedRoomNum: data['bedRoomNum'],
-                      propertySize: data['propertySize'],
-                      address: data['address'],
-                      files: List<String>.from(data['files']),
-                      price: data['price'],
-                    ))
+                    id: data['_id'],
+                    description: data['description'],
+                    title: data['title'],
+                    type: data['type'],
+                    roomNumber: data['roomNumber'],
+                    bedRoomNum: data['bedRoomNum'],
+                    propertySize: data['propertySize'],
+                    address: data['address'],
+                    files: List<String>.from(data['files']),
+                    price: data['price'],
+                    favorite: data['favorite']))
                 .toList();
             errorMessage = '';
           });

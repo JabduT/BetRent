@@ -2,36 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:owner_app/constants/url.dart';
+import 'package:owner_app/models/property.dart';
 import 'package:owner_app/screens/property_detail.dart';
 import 'package:owner_app/themes/colors.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-class Property {
-  final String id;
-  final String title;
-  final String type;
-  final int roomNumber;
-  final int bedRoomNum;
-  final int propertySize;
-  final String address;
-  final List<String> files;
-  final int price;
-  final bool favorite;
-  final String description;
-
-  Property(
-      {required this.id,
-      required this.title,
-      required this.type,
-      required this.roomNumber,
-      required this.description,
-      required this.bedRoomNum,
-      required this.propertySize,
-      required this.address,
-      required this.files,
-      required this.price,
-      required this.favorite});
-}
 
 class _PropertyListScreenState extends State<PropertyListScreen> {
   late List<Property> properties = [];
