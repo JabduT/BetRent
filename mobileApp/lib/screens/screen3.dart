@@ -1,14 +1,18 @@
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:owner_app/constants/url.dart';
 import 'package:flutter/material.dart';
 import 'package:owner_app/themes/colors.dart';
 import 'package:owner_app/widgets/bottom_bar_owner.dart';
+import 'package:image_picker/image_picker.dart';
+
 class AddHouseRentScreen extends StatefulWidget {
   @override
   _AddHouseRentScreenState createState() => _AddHouseRentScreenState();
 }
 
 class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
-  // Define a list of property types
-List<String> propertyTypes = [
+  List<String> propertyTypes = [
   "Apartment",
   "Condo",
   "House",
@@ -25,20 +29,81 @@ List<String> propertyTypes = [
   "Shared Apartment",
   "Townhouse / Terrace",
 ];
+  List<File> _imageFiles = []; // List to hold selected image files
   late String _selectedType; // Declare _selectedType
   late PageController _pageController;
+  late TextEditingController _propertySizeController;
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _roomController ;
+ late TextEditingController _exactLocationController;
+  String _price = '';
+String _selectedPriceType = 'Per Day'; // Default selection
+  String _propertySize = ''; // Variable to hold property size
   int _currentPage = 0;
+  // Method to pick an image using image_picker
+  Future<void> _pickImage() async {
+    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _imageFiles.add(File(pickedImage.path)); // Create a File object from the picked image path
+      });
+    }
+  }
+
+
+  Future<void> _submitHouse() async {
+    // Prepare the data to be sent in the POST request
+    Map<String, dynamic> postData = {
+      'title': _titleController.text,
+      'type': _selectedType,
+      'description': _descriptionController.text,
+      'price': _price,
+      'priceType': _selectedPriceType,
+      'numOfRooms': _roomController.text,
+      'exactLocation': _exactLocationController.text,
+      'propertySize': _propertySize,
+      'imageFiles': _imageFiles.map((file) => file.path).toList(),
+    };
+      // Make the HTTP POST request
+    var response = await http.post(
+      Uri.parse('${AppConstants.APIURL}/houses'),
+      body: postData,
+    );
+
+    // Check the response status
+    if (response.statusCode == 200) {
+      // Handle successful submission
+      // You can show a success message or navigate to a success page
+      print('House submitted successfully');
+    } else {
+      // Handle error
+      print('Error submitting house: ${response.body}');
+    }
+  }
+
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentPage);
     _selectedType = propertyTypes[0]; // Initialize _selectedType here
+    _propertySizeController = TextEditingController();
+    _titleController = TextEditingController();
+    _descriptionController=TextEditingController();
+    _roomController=TextEditingController();
+    _exactLocationController=TextEditingController();
 
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _propertySizeController.dispose();
+     _titleController.dispose(); 
+     _descriptionController.dispose();
+     _roomController.dispose();
+
     super.dispose();
   }
 
@@ -103,6 +168,7 @@ Widget build(BuildContext context) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
+          controller: _titleController, // Add the controller here
             decoration: InputDecoration(
               labelText: 'Post Title',
               filled: true,
@@ -141,6 +207,7 @@ Widget build(BuildContext context) {
           ),
           SizedBox(height: 10.0),
           TextFormField(
+            controller: _descriptionController,
             decoration: InputDecoration(
               labelText: 'House Description',
               filled: true,
@@ -153,7 +220,6 @@ Widget build(BuildContext context) {
             maxLines: 4, // Increase height
             // Implement validation and save logic here
           ),
-
           SizedBox(height: 20.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -179,129 +245,87 @@ Widget build(BuildContext context) {
     );
   }
 
-  Widget _buildSecondScreen() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Total Number of Rooms',
-              filled: true,
-              fillColor: AppColors.primaryColor.withOpacity(0.1),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide.none, // Remove border color
-              ),
-            ),
-            keyboardType: TextInputType.number,
-            // Implement validation and save logic here
-          ),
-          SizedBox(height: 10.0),
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Price',
-            filled: true,
-            fillColor: AppColors.primaryColor.withOpacity(0.1),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide.none, // Remove border color
-            ),
-          ),
-          keyboardType: TextInputType.number,
-          // Implement validation and save logic here
-        ),
-          SizedBox(height: 10.0),
-          TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Exact Location',
-              filled: true,
-              fillColor: AppColors.primaryColor.withOpacity(0.1),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none, // Remove border color
-              ),
-            ),
-            maxLines: 4, // Increase height
-            // Implement validation and save logic here
-          ),
-
-          SizedBox(height: 20.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-            ElevatedButton(
-                onPressed: _previousPage,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor, // Change button color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
-                ),
-                child: Text(
-                  'Back',
-                  style: TextStyle(color: Colors.white), // Set text color to white
-                ),
-              ),
-
-              ElevatedButton(
-                onPressed: _nextPage,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor, // Change button color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
-                ),
-                child: Text(
-                  'Next',
-                  style: TextStyle(color: Colors.white), // Set text color to white
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-Widget _buildFinalScreen() {
+Widget _buildSecondScreen() {
   return SingleChildScrollView(
     padding: EdgeInsets.all(20.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Property Size (sqft)',
-            filled: true,
-            fillColor: AppColors.primaryColor.withOpacity(0.1),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide.none, // Remove border color
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Price(birr)',
+                  filled: true,
+                  fillColor: AppColors.primaryColor.withOpacity(0.1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  _price = value;
+                },
+              ),
             ),
-          ),
-          keyboardType: TextInputType.number,
-          // Implement validation and save logic here
+            SizedBox(width: 10.0),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                value: _selectedPriceType,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedPriceType = value!;
+                  });
+                },
+                items: ['Per Day', 'Per Month', 'Per Year'].map((type) {
+                  return DropdownMenuItem<String>(
+                    value: type,
+                    child: Text(type),
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: AppColors.primaryColor.withOpacity(0.1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         SizedBox(height: 20.0),
         TextFormField(
+          controller: _roomController,
           decoration: InputDecoration(
-            labelText: 'Price',
+       labelText: 'Number of rooms',
+        filled: true,
+    fillColor: AppColors.primaryColor.withOpacity(0.1),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0),
+      borderSide: BorderSide.none,
+    ),
+  ),
+  keyboardType: TextInputType.number,
+  // Implement validation and save logic here
+),
+        SizedBox(height: 20.0),
+        TextFormField(
+          controller: _exactLocationController,
+          decoration: InputDecoration(
+            labelText: 'Exact Location',
             filled: true,
             fillColor: AppColors.primaryColor.withOpacity(0.1),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide.none, // Remove border color
+              borderSide: BorderSide.none,
             ),
           ),
-          keyboardType: TextInputType.number,
-          // Implement validation and save logic here
+          maxLines: 4,
         ),
-       
-       
         SizedBox(height: 20.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -320,20 +344,18 @@ Widget _buildFinalScreen() {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: _nextPage,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
+            ElevatedButton(
+              onPressed: _nextPage,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Text(
-                  'Next',
-                  style: TextStyle(color: Colors.white),
-                ),
+                padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
+              ),
+              child: Text(
+                'Next',
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -342,6 +364,95 @@ Widget _buildFinalScreen() {
     ),
   );
 }
+ 
+ 
+Widget _buildFinalScreen() {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Property Size (sqft)',
+              filled: true,
+              fillColor: AppColors.primaryColor.withOpacity(0.1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide.none, // Remove border color
+              ),
+            ),
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              setState(() {
+                _propertySize = value; // Update property size when the user types
+              });
+            },
+            // Implement validation and save logic here
+          ),
+          SizedBox(height: 20.0),
+          ElevatedButton(
+            onPressed: _pickImage,
+            child: Text('Upload Image'),
+          ),
+          SizedBox(height: 10.0),
+          _imageFiles.isEmpty
+              ? Container()
+              : SizedBox(
+                  height: 100.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _imageFiles.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: EdgeInsets.only(right: 10.0),
+                        child: Image.file(
+                          _imageFiles[index],
+                          width: 100.0,
+                          height: 100.0,
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+          SizedBox(height: 20.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                onPressed: _previousPage,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
+                ),
+                child: Text(
+                  'Back',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+ElevatedButton(
+  onPressed: _submitHouse, // Call _submitHouse method when the button is pressed
+  style: ElevatedButton.styleFrom(
+    backgroundColor: AppColors.primaryColor,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    padding: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
+  ),
+  child: Text(
+    'Submit',
+    style: TextStyle(color: Colors.white),
+  ),
+),
 
-
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
