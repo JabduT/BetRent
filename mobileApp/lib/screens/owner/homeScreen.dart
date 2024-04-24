@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:owner_app/screens/owner/addHouse.dart';
 import 'package:owner_app/themes/colors.dart';
+import 'package:owner_app/widgets/bottom_bar_owner.dart';
 class HomeScreen extends StatelessWidget {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Future<String?> getToken() async {
@@ -22,7 +23,7 @@ class HomeScreen extends StatelessWidget {
           );
         } else if (snapshot.hasData && snapshot.data != null) {
           // Token is available, show home screen content
-          return _buildHomePageContent();
+          return _buildHomePageContent(context);
         } else {
           // No token found, redirect to login screen
           Navigator.pushReplacementNamed(context, '/login');
@@ -32,7 +33,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHomePageContent() {
+  Widget _buildHomePageContent(BuildContext context) {
   return Scaffold(
     key: _scaffoldKey,
     appBar: AppBar(
@@ -45,7 +46,9 @@ class HomeScreen extends StatelessWidget {
         },
       ),
     ),
-    body: SingleChildScrollView(
+    body: 
+    
+    SingleChildScrollView(
       padding: EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +82,6 @@ class HomeScreen extends StatelessWidget {
           ),
 
           SizedBox(height: 20.0),
-
           // Image between the statement and features
           Image.asset(
             'assets/home_image.png',
@@ -97,10 +99,10 @@ class HomeScreen extends StatelessWidget {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             children: [
-              _buildFeatureTile(Icons.add, 'Post your house'),
-              _buildFeatureTile(Icons.message, 'Messaging'),
-              _buildFeatureTile(Icons.house, 'My houses'),
-              _buildFeatureTile(Icons.person, 'My profile'),
+              _buildFeatureTile(context,Icons.add, 'Post your house'),
+              _buildFeatureTile(context,Icons.message, 'Messaging'),
+              _buildFeatureTile(context,Icons.house, 'My houses'),
+              _buildFeatureTile(context,Icons.person, 'My profile'),
             ],
           ),
         ],
@@ -172,13 +174,23 @@ class HomeScreen extends StatelessWidget {
 
 
 
-    Widget _buildFeatureTile(IconData iconData, String label) {
+    Widget _buildFeatureTile(BuildContext context,IconData iconData, String label) {
     return Card(
       elevation: 2.0,
       child: InkWell(
       onTap: () {
-          // If it's an Icon widget, perform specific actions based on the icon
-      },
+        // Handle feature tap based on the iconData passed
+        if (iconData == Icons.add) {
+          // Example: Navigate to AddHouseRentScreen for the Add house feature
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddHouseRentScreen()),
+          );
+        } else if (iconData == Icons.message) {
+          // Handle Messaging feature
+        } else if (iconData == Icons.house) {
+          // Handle My houses feature
+        }      },
     
         child: Padding(
           padding: EdgeInsets.all(16.0),
