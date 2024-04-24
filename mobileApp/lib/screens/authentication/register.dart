@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:owner_app/constants/url.dart';
 import 'package:owner_app/screens/authentication/register.dart';
-import 'package:owner_app/screens/screen1.dart';
+import 'package:owner_app/screens/owner/homeScreen.dart';
 import 'package:owner_app/themes/colors.dart';
 
 class SignUpScreen extends StatefulWidget {

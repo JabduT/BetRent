@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:owner_app/constants/url.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:owner_app/screens/authentication/register.dart';
-import 'package:owner_app/screens/screen1.dart';
+import 'package:owner_app/screens/owner/homeScreen.dart';
 import 'package:owner_app/themes/colors.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -28,8 +28,8 @@ class LoginScreen extends StatelessWidget {
     );
 
     // Log response
-    print('Response status code: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    // print('Response status code: ${response.statusCode}');
+    // print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       final storage = FlutterSecureStorage();
@@ -83,7 +83,8 @@ class LoginScreen extends StatelessWidget {
                 "Login to your account",
                 style: TextStyle(
                   fontWeight: FontWeight.bold, // Bold font weight
-                  color: AppColors.primaryColor, // Primary color
+                  color: AppColors.primaryColor,
+                   // Primary color
                 ),
               ),
             ),
