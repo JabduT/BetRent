@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:owner_app/screens/authentication/register.dart';
+import 'package:owner_app/screens/chatting_screen.dart';
 import 'package:owner_app/screens/renter/property_list_screen.dart';
 import 'package:owner_app/widgets/bottom_bar_owner.dart';
 import 'package:owner_app/screens/owner/homeScreen.dart';
@@ -29,6 +30,8 @@ class MyApp extends StatelessWidget {
         '/owner_home': (context) => OwnerBottomNavigationBar(),
         '/renter_home': (context) => RenterBottomNavigationBar(),
         '/screen1': (context) => PropertyListScreen(),
+        '/chat': (context) => ChattingScreen(), // Use the new ChattingScreen
+
         '/screen4': (context) => Screen4(),
       },
     );
