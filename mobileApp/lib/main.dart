@@ -4,9 +4,9 @@ import 'package:owner_app/screens/chatting_screen.dart';
 import 'package:owner_app/screens/renter/property_list_screen.dart';
 import 'package:owner_app/widgets/bottom_bar_owner.dart';
 import 'package:owner_app/screens/owner/homeScreen.dart';
-import 'package:owner_app/screens/screen2.dart';
+import 'package:owner_app/screens/common/notification.dart';
 import 'package:owner_app/screens/owner/addHouse.dart';
-import 'package:owner_app/screens/screen4.dart';
+import 'package:owner_app/screens/common/messaging.dart';
 import 'package:owner_app/screens/authentication/login.dart';
 import 'package:owner_app/widgets/bottom_bar_renter.dart';
 

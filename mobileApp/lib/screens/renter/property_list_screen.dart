@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:owner_app/constants/url.dart';
 import 'package:owner_app/models/property.dart';
-import 'package:owner_app/screens/property_detail.dart';
+import 'package:owner_app/screens/common/property_detail.dart';
 import 'package:owner_app/themes/colors.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
