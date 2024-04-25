@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
                   '/renter_home': (context) => RenterBottomNavigationBar(),
                   '/screen1': (context) => PropertyListScreen(),
                   // '/chat': (context) => ChattingScreen(),
-                  '/screen4': (context) => Screen4(),
+                  '/screen4': (context) => Screen4(), //add it here
                 },
               );
             } else {
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
                   '/owner_home': (context) => OwnerBottomNavigationBar(),
                   '/screen1': (context) => PropertyListScreen(),
                   // '/chat': (context) => ChattingScreen(),
-                  '/screen4': (context) => Screen4(),
+                  '/screen4': (context) => Screen4(), //and here
                 },
               );
             }

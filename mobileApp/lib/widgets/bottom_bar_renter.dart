@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:owner_app/screens/chatting_screen.dart';
+import 'package:owner_app/screens/common/profile.dart';
 import 'package:owner_app/screens/renter/favorite_list.dart';
 import 'package:owner_app/screens/renter/property_list_screen.dart';
 import 'package:owner_app/screens/owner/homeScreen.dart';
@@ -24,8 +25,8 @@ class _RenterBottomNavigationBarState extends State<RenterBottomNavigationBar> {
     // ChattingScreen(),
     HomeScreen(),
     // Screen2(),
-    Screen2(),
-    Screen2(),
+    // Screen2(),
+    Profile(),
   ];
 
   void _onItemTapped(int index) {

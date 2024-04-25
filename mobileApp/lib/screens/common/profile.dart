@@ -9,7 +9,8 @@ class Profile extends StatelessWidget {
     try {
       final storage = FlutterSecureStorage();
       final token = await storage.read(key: 'token');
-      final response = await http.get(Uri.parse('${AppConstants.APIURL}/user/profile'),
+      final response = await http.get(
+          Uri.parse('${AppConstants.APIURL}/user/profile'),
           headers: <String, String>{
             'Authorization': 'Bearer $token',
           });
