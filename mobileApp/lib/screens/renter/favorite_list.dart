@@ -80,6 +80,7 @@ class _FavoriteListScreenState extends State<FavoriteListScreen> {
           properties = responseData
               .map((data) => Property(
                   id: data['_id'],
+                   owner_Id:data['userId'],
                   description: data['description'],
                   title: data['title'],
                   type: data['type'],

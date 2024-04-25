@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 
 class Property {
   final String id;
+  final owner_Id;
   final String title;
   final String type;
   final int roomNumber;
@@ -16,6 +16,7 @@ class Property {
 
   Property(
       {required this.id,
+      required this.owner_Id,
       required this.title,
       required this.type,
       required this.roomNumber,

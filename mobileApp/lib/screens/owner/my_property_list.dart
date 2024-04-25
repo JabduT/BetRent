@@ -90,6 +90,7 @@ class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
                   address: data['address'],
                   files: List<String>.from(data['files']),
                   price: data['price'],
+                  owner_Id:data['userId'],
                   favorite: data['favorite']))
               .toList();
           errorMessage =

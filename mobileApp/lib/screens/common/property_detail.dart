@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart'; // Import the carousel_slider package
-import 'package:flutter/widgets.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:owner_app/constants/url.dart';
 import 'package:owner_app/models/property.dart';
+import 'package:owner_app/screens/common/ContactDetail.dart';
 import 'package:owner_app/themes/colors.dart';
 
 class PropertyDetailScreen extends StatefulWidget {
@@ -20,11 +20,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Get the screen height
     double screenHeight = MediaQuery.of(context).size.height;
-    // Calculate the desired height as a percentage of the screen height
-    double containerHeight =
-        screenHeight * 0.2; // Adjust the percentage as needed
+    double containerHeight = screenHeight * 0.2;
 
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +29,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(10.0), // Set margin around the column
+          padding: EdgeInsets.all(10.0),
           child: Column(
             children: <Widget>[
               Container(
@@ -122,7 +119,12 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                 margin: EdgeInsets.symmetric(vertical: 16),
                 child: TextButton(
                   onPressed: () {
-                    // Add your functionality here
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ContactDetail(userId: widget.property.owner_Id),
+                      ),
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
