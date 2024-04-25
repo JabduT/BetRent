@@ -60,17 +60,20 @@ exports.getAllUsers = async (req, res) => {
 
 
 exports.getMe =async (req, res, next) => {
+  console.log('get me');
   req.params.userId = req.user.id;
   next();
 };
 // Get user by ID
 exports.getUserById = async (req, res) => {
+  console.log('get user');
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json(user);
+    res.status(200).json({status:"success",user:user});
+    console.log('done')
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

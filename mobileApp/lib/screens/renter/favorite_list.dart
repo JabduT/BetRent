@@ -73,6 +73,7 @@ class _FavoriteListScreenState extends State<FavoriteListScreen> {
       final user = jsonDecode(userData);
       userId = user['_id'];
     }
+
   }
 
   @override

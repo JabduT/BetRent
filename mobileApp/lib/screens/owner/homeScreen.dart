@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:owner_app/screens/common/profile.dart';
 import 'package:owner_app/screens/owner/addHouse.dart';
 import 'package:owner_app/themes/colors.dart';
 import 'package:owner_app/widgets/bottom_bar_owner.dart';
@@ -69,6 +70,8 @@ class HomeScreen extends StatelessWidget {
       },
     );
   }
+
+
 
   Widget _buildHomePageContent(BuildContext context) {
     return Scaffold(
@@ -197,18 +200,26 @@ class HomeScreen extends StatelessWidget {
     return Card(
       elevation: 2.0,
       child: InkWell(
-        onTap: () {
-          if (iconData == Icons.add) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddHouseRentScreen()),
-            );
-          } else if (iconData == Icons.message) {
-            // Handle Messaging feature
-          } else if (iconData == Icons.house) {
-            // Handle My houses feature
-          }
-        },
+      onTap: () {
+        if (iconData == Icons.add) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddHouseRentScreen()),
+          );
+        } else if (iconData == Icons.message) {
+          // Handle Messaging feature
+        } else if (iconData == Icons.house) {
+          // Handle My houses feature
+        }  
+        else if(iconData==Icons.person){
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Profile ()),
+  );
+
+        }
+            },
+    
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
