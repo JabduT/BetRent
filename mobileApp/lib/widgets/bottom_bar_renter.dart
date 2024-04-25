@@ -23,8 +23,8 @@ class _RenterBottomNavigationBarState extends State<RenterBottomNavigationBar> {
     PropertyListScreen(),
     FavoriteListScreen(),
     // ChattingScreen(),
-    HomeScreen(),
-    // Screen2(),
+    // HomeScreen(),
+    Screen2(),
     // Screen2(),
     ProfileScreen(),
   ];

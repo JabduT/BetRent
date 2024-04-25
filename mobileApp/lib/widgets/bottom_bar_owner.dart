@@ -22,7 +22,7 @@ class _OwnerBottomNavigationBarState extends State<OwnerBottomNavigationBar> {
     HomeScreen(),
     OwnerPropertyListScreen(),
     AddHouseRentScreen(),
-    // Screen2(),
+     Screen2(),
     // ChattingScreen(),
     // Screen3(),
     ProfileScreen(),
@@ -56,7 +56,7 @@ class _OwnerBottomNavigationBarState extends State<OwnerBottomNavigationBar> {
               color:
                   _selectedIndex == 3 ? AppColors.secondaryColor : Colors.white,
               size: 30),
-          Icon(Icons.notifications,
+          Icon(Icons.person,
               color:
                   _selectedIndex == 4 ? AppColors.secondaryColor : Colors.white,
               size: 30),

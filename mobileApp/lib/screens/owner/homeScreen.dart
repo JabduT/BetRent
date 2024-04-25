@@ -115,10 +115,10 @@ class HomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 20.0),
             Image.asset(
-              'assets/home_image.png',
+              'assets/images/homeA1.jpg',
               height: 200.0,
               width: double.infinity,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
             ),
             SizedBox(height: 20.0),
             GridView.count(

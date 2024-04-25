@@ -42,7 +42,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'Authorization': 'Bearer $token',
         },
       );
-      print(response.body);
       setState(() {
         profileData = jsonDecode(response.body)['user'];
       });
@@ -92,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: Text('My Profile'),
       ),
-      body: _buildProfileContent(),
+      body: _buildProfileContent(context),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -154,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileContent() {
+  Widget _buildProfileContent(BuildContext context) {
     if (profileData == null) {
       return Center(child: CircularProgressIndicator());
     }
@@ -190,6 +189,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (fullName != null) _buildProfileItem('Name', fullName),
           if (userEmail != null) _buildProfileItem('Email', userEmail),
           _buildProfileItem('Phone', userPhone),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Logout'),
+            onTap: () {
+              _logout(context); // Call logout function
+            },
+          ),
         ],
       ),
     );
