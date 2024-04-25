@@ -30,7 +30,7 @@ router.post("/login", Login);
 router.post('/users/create',createUser);
 //view
 router.get("/users", getAllUsers);
-router.get("/users/profile",authenticate,getMe,getUserById);
+router.get("/users/profile",authenticate,getMe);
 router.get("/users/:id", getUserById);
 //put(getMe,updateUser);
 router.put("/users/:id", updateUser);

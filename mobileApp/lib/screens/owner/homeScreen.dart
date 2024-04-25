@@ -214,7 +214,7 @@ class HomeScreen extends StatelessWidget {
         else if(iconData==Icons.person){
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => Profile ()),
+    MaterialPageRoute(builder: (context) => ProfileScreen ()),
   );
 
         }

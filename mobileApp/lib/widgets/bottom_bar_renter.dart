@@ -26,7 +26,7 @@ class _RenterBottomNavigationBarState extends State<RenterBottomNavigationBar> {
     HomeScreen(),
     // Screen2(),
     // Screen2(),
-    Profile(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -53,7 +53,7 @@ class _RenterBottomNavigationBarState extends State<RenterBottomNavigationBar> {
               color:
                   _selectedIndex == 2 ? AppColors.secondaryColor : Colors.white,
               size: 30),
-          Icon(Icons.notifications,
+          Icon(Icons.person,
               color:
                   _selectedIndex == 3 ? AppColors.secondaryColor : Colors.white,
               size: 30),

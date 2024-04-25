@@ -25,7 +25,7 @@ class _OwnerBottomNavigationBarState extends State<OwnerBottomNavigationBar> {
     // Screen2(),
     // ChattingScreen(),
     // Screen3(),
-    Profile(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
