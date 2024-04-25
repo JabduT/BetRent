@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         '/owner_home': (context) => OwnerBottomNavigationBar(),
         '/renter_home': (context) => RenterBottomNavigationBar(),
         '/screen1': (context) => PropertyListScreen(),
-        '/chat': (context) => ChattingScreen(), // Use the new ChattingScreen
+        // '/chat': (context) => ChattingScreen(), // Use the new ChattingScreen
 
         '/screen4': (context) => Screen4(),
       },

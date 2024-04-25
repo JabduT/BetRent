@@ -22,7 +22,7 @@ class _OwnerBottomNavigationBarState extends State<OwnerBottomNavigationBar> {
     OwnerPropertyListScreen(),
     AddHouseRentScreen(),
     // Screen2(),
-    ChattingScreen(),
+    // ChattingScreen(),
     // Screen3(),
     Screen4(),
   ];
