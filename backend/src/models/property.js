@@ -55,10 +55,7 @@ const propertySchema = new mongoose.Schema(
     },
     priceType: {
       type: String,
-      enum: [
-        "Per Day",
-        "Per month",
-        "per year"]
+      enum: ["Per Day", "Per Month", "Per Year"],
     },
     price: {
       type: Number,
@@ -94,16 +91,15 @@ function validateProperty(property) {
       )
       .default("House"),
     description: Joi.string().min(10).max(2000).required(),
-    numOfRoom: Joi.number().integer().min(0).required(),
-    numOfBathroom: Joi.number().integer().min(0).required(),
-    address: Joi.string().min(10).max(1000).required(),
+    numOfRoom: Joi.number().integer().min(0),
+    numOfBathroom: Joi.number().integer().min(0),
+    address: Joi.string().min(10).max(1000),
     userId: Joi.string().required(),
-    files: Joi.array().items(Joi.string()).required(),
-    pricePerDay: Joi.number().min(0).required(),
-    pricePerMonth: Joi.number().min(0).required(),
-    pricePerYear: Joi.number().min(0).required(),
-    propertySize: Joi.number().min(0).required(),
-
+    files: Joi.array().items(Joi.string()),
+    price: Joi.number().min(0),
+    priceType: Joi.string().valid("Per Day", "Per Month", "Per Year"),
+    propertySize: Joi.number().min(0),
+    imageFiles: Joi.array().items(Joi.string()),
   });
   return schema.validate(property);
 }
