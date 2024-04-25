@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:owner_app/constants/url.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:owner_app/constants/url.dart';
 import 'package:owner_app/screens/authentication/register.dart';
 import 'package:owner_app/screens/owner/homeScreen.dart';
 import 'package:owner_app/themes/colors.dart';
@@ -27,10 +27,6 @@ class LoginScreen extends StatelessWidget {
       }),
     );
 
-    // Log response
-    // print('Response status code: ${response.statusCode}');
-    // print('Response body: ${response.body}');
-
     if (response.statusCode == 200) {
       final storage = FlutterSecureStorage();
       await storage.write(
@@ -38,14 +34,13 @@ class LoginScreen extends StatelessWidget {
       final userJson = jsonEncode(jsonDecode(response.body)['user']);
       await storage.write(key: 'user', value: userJson);
       Map<String, dynamic> responseBody = jsonDecode(response.body);
-      String role = responseBody['user']
-          ['role']; // Assuming 'user' contains the role property
-      print(role);
+      String role = responseBody['user']['role'];
 
       if (role == 'renter') {
         Navigator.pushReplacementNamed(context, '/renter_home');
-      } else
+      } else {
         Navigator.pushReplacementNamed(context, '/owner_home');
+      }
     } else {
       showDialog(
         context: context,
@@ -63,6 +58,13 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
+  void navigateToRegister(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => SignUpScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +73,6 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Logo Image
             SizedBox(height: 20),
             Image.asset(
               'assets/images/logo.png',
@@ -82,43 +83,39 @@ class LoginScreen extends StatelessWidget {
               child: Text(
                 "Login to your account",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold, // Bold font weight
+                  fontWeight: FontWeight.bold,
                   color: AppColors.primaryColor,
-                   // Primary color
                 ),
               ),
             ),
             SizedBox(height: 20),
-            // Phone Number Field
             TextFormField(
               controller: phoneController,
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
                 labelText: 'Phone Number',
                 filled: true,
-                fillColor:
-                    AppColors.primaryColor.withOpacity(0.3), // 30% opacity
+                fillColor: AppColors.primaryColor.withOpacity(0.3),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide.none, // No border
+                  borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                prefixText: '+251', // Country code
+                prefixText: '+251',
                 prefixStyle: TextStyle(color: Colors.black),
                 suffixIcon: Container(
                   height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color: AppColors.primaryColor, // Background color for icon
+                    color: AppColors.primaryColor,
                   ),
                   child: Icon(
                     Icons.phone,
-                    color: Colors.white, // Icon color
-                  ), // Phone Icon
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
             SizedBox(height: 20),
-            // PIN Field
             TextFormField(
               controller: pinController,
               keyboardType: TextInputType.number,
@@ -126,28 +123,33 @@ class LoginScreen extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'PIN',
                 filled: true,
-                fillColor:
-                    AppColors.primaryColor.withOpacity(0.3), // 30% opacity
+                fillColor: AppColors.primaryColor.withOpacity(0.3),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide.none, // No border
+                  borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 suffixIcon: Container(
                   height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color: AppColors.primaryColor, // Background color for icon
+                    color: AppColors.primaryColor,
                   ),
                   child: Icon(
                     Icons.lock,
-                    color: Colors.white, // Icon color
-                  ), // Lock Icon
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
             SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () => loginUser(context),
+              onPressed: () {
+                try {
+                  loginUser(context);
+                } catch (e) {
+                  print('Error during login: $e');
+                }
+              },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
                   AppColors.primaryColor,
@@ -157,8 +159,8 @@ class LoginScreen extends StatelessWidget {
                 'Login',
                 style: TextStyle(
                   height: 3.5,
-                  fontWeight: FontWeight.bold, // Bold font weight
-                  color: Colors.white, // Primary color
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -195,13 +197,16 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: 40),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/register');
+                try {
+                  navigateToRegister(context);
+                } catch (e) {
+                  print('Error during navigation to RegisterScreen: $e');
+                }
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                      color: AppColors.primaryColor), // Primary color border
+                  border: Border.all(color: AppColors.primaryColor),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: Center(
