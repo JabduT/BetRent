@@ -51,6 +51,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _logout(BuildContext context) async {
+    final bool logoutConfirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Logout"),
+          content: Text("Are you sure you want to logout?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // User canceled logout
+              },
+              child: Text("No"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // User confirmed logout
+              },
+              child: Text("Yes"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (logoutConfirmed != null && logoutConfirmed) {
+      // Perform logout action here, for example, delete stored token
+      final storage = FlutterSecureStorage();
+      await storage.delete(key: 'token');
+
+      // Navigate to login screen
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +93,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text('My Profile'),
       ),
       body: _buildProfileContent(),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor,
+              ),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/logo.png',
+                    height: 40.0,
+                    width: 40.0,
+                  ),
+                  SizedBox(width: 10.0),
+                  Text(
+                    'Find Renter',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.pin),
+              title: Text('Change PIN'),
+              onTap: () {
+                // Handle change PIN action
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onTap: () {
+                _logout(context); // Call logout function
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('About'),
+              onTap: () {
+                // Handle about action
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.star),
+              title: Text('Rate the App'),
+              onTap: () {
+                // Handle rate the app action
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 

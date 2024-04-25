@@ -14,6 +14,7 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
   bool isLoading = false;
   String errorMessage = '';
   String userId = '';
+  bool isSearching = false;
 
   // Define the list of filter options
   final List<String> filterOptions = [
@@ -155,95 +156,137 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(120),
-        child: AppBar(
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(60),
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  margin: EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryColor.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primaryColor.withOpacity(0.01),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            hintText: 'Search...',
-                            border: InputBorder.none,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 120,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 26, 10, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Add the app logo
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            "assets/logo.png",
+                            height: isSearching ? 24 : 56,
                           ),
-                          onSubmitted: (_) => search(),
+                          if (!isSearching)
+                            Text(
+                              "Hello, Welcome!",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                        ],
+                      ),
+                    ),
+                    Flexible(
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage("assets/profile.jpg"),
+                          radius: isSearching ? 20 : 30,
                         ),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            pinned: true,
+            floating: true,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(60),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          fillColor: AppColors.primaryColor.withOpacity(0.2),
+                          hintText: 'Search...',
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            isSearching = value.isNotEmpty;
+                          });
+                        },
+                      ),
+                    ),
+                    if (!isSearching)
                       IconButton(
                         icon: Icon(Icons.search),
                         onPressed: search,
                       ),
-                    ],
-                  ),
+                  ],
                 ),
-                SizedBox(height: 10),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: filterOptions
-                        .map((filter) => Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: FilterChip(
-                                label: Text(filter),
-                                selected: selectedType == filter,
-                                onSelected: (isSelected) {
-                                  setState(() {
-                                    selectedType = isSelected ? filter : '';
-                                  });
-                                  fetchData();
-                                },
-                              ),
-                            ))
-                        .toList(),
-                  ),
+              ),
+            ),
+            title: null,
+            actions: [
+              if (isSearching)
+                IconButton(
+                  icon: Icon(Icons.cancel),
+                  onPressed: () {
+                    _searchController.clear();
+                    setState(() {
+                      isSearching = false;
+                    });
+                  },
                 ),
-              ],
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: filterOptions
+                      .map((filter) => Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: FilterChip(
+                              label: Text(filter),
+                              selected: selectedType == filter,
+                              onSelected: (isSelected) {
+                                setState(() {
+                                  selectedType = isSelected ? filter : '';
+                                });
+                                fetchData();
+                              },
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
             ),
           ),
-        ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return PropertyListItem(
+                  property: properties[index],
+                  onFavoriteTap: () {
+                    addFavorite(properties[index].id);
+                  },
+                );
+              },
+              childCount: properties.length,
+            ),
+          ),
+        ],
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : errorMessage.isNotEmpty
-              ? Center(
-                  child: Text(errorMessage),
-                )
-              : properties.isEmpty
-                  ? Center(
-                      child: Text('No data found.'),
-                    )
-                  : ListView.builder(
-                      itemCount: properties.length,
-                      itemBuilder: (context, index) {
-                        return PropertyListItem(
-                          property: properties[index],
-                          onFavoriteTap: () {
-                            addFavorite(properties[index].id);
-                          },
-                        );
-                      },
-                    ),
     );
   }
 }

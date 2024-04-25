@@ -65,10 +65,12 @@ class LoginScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.0),
+          
           child: Column(
+            
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 20),
+              SizedBox(height: 100),
               Image.asset(
                 'assets/images/logo.png',
                 height: 120,
@@ -83,7 +85,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 40),
               TextFormField(
                 controller: phoneController,
                 keyboardType: TextInputType.phone,
