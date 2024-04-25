@@ -1,16 +1,10 @@
-# owner_app
-
-A new Flutter project.
+# BetRent App
+Flutter-based mobile application for both owners and renters.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Set up the Flutter development environment.
+2. Connect your mobile device or emulator.
+3. Install all dependecies used in the project, runnng 'flutter pub get'.
+4. Run the Flutter app using `flutter run`.
+5. Access the application on your mobile device or emulator.
