@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart'; // Import the carousel_slider package
 import 'package:flutter/widgets.dart';
 import 'package:owner_app/constants/url.dart';
-import 'package:owner_app/screens/renter/property_list_screen.dart';
+import 'package:owner_app/models/property.dart';
 import 'package:owner_app/themes/colors.dart';
 
 class PropertyDetailScreen extends StatefulWidget {

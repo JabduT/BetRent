@@ -1,31 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:owner_app/constants/url.dart';
+import 'package:owner_app/models/property.dart';
+import 'package:owner_app/screens/common/property_detail.dart';
 import 'package:owner_app/themes/colors.dart';
-
-class Property {
-  final String title;
-  final String type;
-  final int roomNumber;
-  final int bedRoomNum;
-  final int propertySize;
-  final String address;
-  final List<String> files;
-  final int price;
-
-  Property({
-    required this.title,
-    required this.type,
-    required this.roomNumber,
-    required this.bedRoomNum,
-    required this.propertySize,
-    required this.address,
-    required this.files,
-    required this.price,
-  });
-}
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
   late List<Property> properties = [];
@@ -33,6 +13,7 @@ class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
   String selectedType = '';
   bool isLoading = false;
   String errorMessage = '';
+  String userId = '';
 
   // Define the list of filter options
   final List<String> filterOptions = [
@@ -58,6 +39,17 @@ class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
     super.initState();
     _searchController = TextEditingController();
     fetchData();
+    getUserId();
+  }
+
+  Future<void> getUserId() async {
+    final storage = FlutterSecureStorage();
+    final String? userData = await storage.read(key: 'user');
+
+    if (userData != null) {
+      final user = jsonDecode(userData);
+      userId = user['_id'];
+    }
   }
 
   @override
@@ -72,44 +64,73 @@ class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
     });
     try {
       final storage = FlutterSecureStorage();
-      final String? userData = await storage.read(key: 'user');
-      if (userData != null) {
-        final user = jsonDecode(userData);
-        final response = await http.get(Uri.parse(
-            '${AppConstants.APIURL}/properties?userId=${user['_id']}${_buildQueryParams()}'));
+      final token = await storage.read(key: 'token');
 
-        if (response.statusCode == 200) {
-          final List<dynamic> responseData = jsonDecode(response.body);
-          setState(() {
-            properties = responseData
-                .map((data) => Property(
-                      title: data['title'],
-                      type: data['type'],
-                      roomNumber: data['roomNumber'],
-                      bedRoomNum: data['bedRoomNum'],
-                      propertySize: data['propertySize'],
-                      address: data['address'],
-                      files: List<String>.from(data['files']),
-                      price: data['price'],
-                    ))
-                .toList();
-            errorMessage = '';
-          });
-        } else {
-          throw Exception('Failed to load properties: ${response.statusCode}');
-        }
+      final response = await http.get(
+        Uri.parse(
+          '${AppConstants.APIURL}/properties?userId=${userId}${_buildQueryParams()}',
+        ),
+        headers: <String, String>{
+          'Authorization': 'Bearer $token', // Include token in the header
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(response.body);
+        setState(() {
+          properties = responseData
+              .map((data) => Property(
+                  id: data['_id'],
+                  description: data['description'],
+                  title: data['title'],
+                  type: data['type'],
+                  roomNumber: data['roomNumber'],
+                  bedRoomNum: data['bedRoomNum'],
+                  propertySize: data['propertySize'],
+                  address: data['address'],
+                  files: List<String>.from(data['files']),
+                  price: data['price'],
+                  favorite: data['favorite']))
+              .toList();
+          errorMessage =
+              ''; // Clear error message if data is loaded successfully
+        });
       } else {
-        throw Exception('User data not found.');
+        throw Exception('Failed to load properties: ${response.statusCode}');
       }
     } catch (e) {
       setState(() {
         properties = [];
-        errorMessage = 'no data found';
+        errorMessage =
+            'Failed to load properties. Please check your internet connection and try again.';
       });
     } finally {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  Future<void> addFavorite(String propertyId) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${AppConstants.APIURL}/favorites'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(<String, String>{
+          'userId': userId,
+          'propertyId': propertyId,
+        }),
+      );
+      if (response.statusCode == 201) {
+        // Favorite added successfully
+        print('Favorite added for property: $propertyId');
+      } else {
+        throw Exception('Failed to add favorite: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error adding favorite: $e');
     }
   }
 
@@ -122,10 +143,11 @@ class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
   String _buildQueryParams() {
     String queryParams = '';
     if (_searchController.text.isNotEmpty) {
-      queryParams = '&q=${_searchController.text}';
+      queryParams = '?q=${_searchController.text}';
     }
     if (selectedType.isNotEmpty) {
-      queryParams += '&type=$selectedType';
+      queryParams +=
+          '${_searchController.text.isEmpty ? '?' : '&'}type=$selectedType';
     }
     return queryParams;
   }
@@ -144,11 +166,11 @@ class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   margin: EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor.withOpacity(0.1),
+                    color: AppColors.primaryColor.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: AppColors.primaryColor.withOpacity(0.01),
                         spreadRadius: 2,
                         blurRadius: 5,
                         offset: Offset(0, 3),
@@ -214,7 +236,12 @@ class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
                   : ListView.builder(
                       itemCount: properties.length,
                       itemBuilder: (context, index) {
-                        return PropertyListItem(property: properties[index]);
+                        return PropertyListItem(
+                          property: properties[index],
+                          onFavoriteTap: () {
+                            addFavorite(properties[index].id);
+                          },
+                        );
                       },
                     ),
     );
@@ -223,102 +250,136 @@ class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
 
 class OwnerPropertyListScreen extends StatefulWidget {
   @override
-  _OwnerPropertyListScreenState createState() =>
-      _OwnerPropertyListScreenState();
+  _OwnerPropertyListScreenState createState() => _OwnerPropertyListScreenState();
 }
 
 class PropertyListItem extends StatelessWidget {
   final Property property;
+  final VoidCallback? onFavoriteTap;
 
-  const PropertyListItem({Key? key, required this.property}) : super(key: key);
+  const PropertyListItem({Key? key, required this.property, this.onFavoriteTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(4.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PropertyDetailScreen(property: property),
           ),
-        ],
-        color: Colors.white, // Set the background color to white
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    property.title,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  SizedBox(height: 4),
-                  Text('${property.address}'),
-                  SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.apartment),
-                      Text('${property.roomNumber}'),
-                      SizedBox(width: 6),
-                      Icon(Icons.king_bed),
-                      Text('${property.bedRoomNum}'),
-                    ],
-                  ),
-                  SizedBox(width: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.fullscreen),
-                      Text('${property.propertySize}'),
-                      SizedBox(width: 4),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TextButton(
-                        onPressed: () {}, // Add your action here
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              AppColors.primaryColor),
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              side: BorderSide(color: AppColors.primaryColor),
-                            ),
-                          ),
-                          shadowColor: MaterialStateProperty.all<Color>(
-                              Colors.black.withOpacity(0.2)),
-                          elevation: MaterialStateProperty.all<double>(3.0),
-                        ),
-                        child: Text('${property.price} BIRR'),
-                      ),
-                      SizedBox(width: 4),
-                      Icon(Icons.favorite_outline),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: 16),
-            Image.network(
-              'http://localhost/api/${property.files.first}', // Assuming the API serves images from the same base URL
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.all(4.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primaryColor.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
             ),
           ],
+          color: Colors.white, // Set the background color to white
         ),
+        child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              property.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Text('${property.address}'),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.apartment),
+                          Text('${property.roomNumber}'),
+                          SizedBox(width: 6),
+                          Icon(Icons.king_bed),
+                          Text('${property.bedRoomNum}'),
+                        ],
+                      ),
+                      SizedBox(width: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.fullscreen),
+                          Text('${property.propertySize}'),
+                          SizedBox(width: 4),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TextButton(
+                            onPressed: () {}, // Add your action here
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  AppColors.primaryColor),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  side:
+                                      BorderSide(color: AppColors.primaryColor),
+                                ),
+                              ),
+                              shadowColor: MaterialStateProperty.all<Color>(
+                                  Colors.black.withOpacity(0.2)),
+                              elevation: MaterialStateProperty.all<double>(3.0),
+                            ),
+                            child: Text('${property.price} BIRR'),
+                          ),
+                          SizedBox(width: 4),
+                          property.favorite
+                              ? IconButton(
+                                  onPressed: onFavoriteTap,
+                                  icon: Icon(Icons.favorite),
+                                  color: AppColors.secondaryColor,
+                                )
+                              : IconButton(
+                                  onPressed: onFavoriteTap,
+                                  icon: Icon(Icons.favorite_outline),
+                                  color: AppColors.secondaryColor,
+                                ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 16),
+                Image.network(
+                  'http://localhost/api/${property.files.first}',
+                  // Assuming the API serves images from the same base URL
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              ],
+            )),
       ),
     );
   }
