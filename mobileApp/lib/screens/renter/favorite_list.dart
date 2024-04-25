@@ -2,33 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:owner_app/constants/url.dart';
+import 'package:owner_app/models/property.dart';
+import 'package:owner_app/screens/common/property_detail.dart';
 import 'package:owner_app/themes/colors.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-class Property {
-  final String id;
-  final String title;
-  final String type;
-  final int roomNumber;
-  final int bedRoomNum;
-  final int propertySize;
-  final String address;
-  final List<String> files;
-  final int price;
-  final bool favorite;
-
-  Property(
-      {required this.id,
-      required this.title,
-      required this.type,
-      required this.roomNumber,
-      required this.bedRoomNum,
-      required this.propertySize,
-      required this.address,
-      required this.files,
-      required this.price,
-      required this.favorite});
-}
 
 class _FavoriteListScreenState extends State<FavoriteListScreen> {
   late List<Property> properties = [];
@@ -73,7 +50,6 @@ class _FavoriteListScreenState extends State<FavoriteListScreen> {
       final user = jsonDecode(userData);
       userId = user['_id'];
     }
-
   }
 
   @override
@@ -97,12 +73,14 @@ class _FavoriteListScreenState extends State<FavoriteListScreen> {
           'Authorization': 'Bearer $token', // Include token in the header
         },
       );
+
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body);
         setState(() {
           properties = responseData
               .map((data) => Property(
                   id: data['_id'],
+                  description: data['description'],
                   title: data['title'],
                   type: data['type'],
                   roomNumber: data['roomNumber'],
@@ -187,11 +165,11 @@ class _FavoriteListScreenState extends State<FavoriteListScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   margin: EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor.withOpacity(0.1),
+                    color: AppColors.primaryColor.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: AppColors.primaryColor.withOpacity(0.01),
                         spreadRadius: 2,
                         blurRadius: 5,
                         offset: Offset(0, 3),
@@ -269,12 +247,7 @@ class _FavoriteListScreenState extends State<FavoriteListScreen> {
   }
 }
 
-class FavoriteListScreen extends StatefulWidget {
-  @override
-  _FavoriteListScreenState createState() => _FavoriteListScreenState();
-}
-
-class PropertyListItem extends StatelessWidget {
+class PropertyListItem extends StatefulWidget {
   final Property property;
   final VoidCallback? onFavoriteTap;
 
@@ -282,110 +255,150 @@ class PropertyListItem extends StatelessWidget {
       : super(key: key);
 
   @override
+  _PropertyListItemState createState() => _PropertyListItemState();
+}
+
+class _PropertyListItemState extends State<PropertyListItem> {
+  bool isFavorite = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isFavorite = widget.property.favorite;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(4.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                PropertyDetailScreen(property: widget.property),
           ),
-        ],
-        color: Colors.white, // Set the background color to white
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        property.title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      property.favorite
-                          ? IconButton(
-                              onPressed: onFavoriteTap,
-                              icon: Icon(Icons.favorite),
-                              color: AppColors.secondaryColor,
-                            )
-                          : IconButton(
-                              onPressed: onFavoriteTap,
-                              icon: Icon(Icons.favorite_outline),
-                              color: AppColors.secondaryColor,
-                            ),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  Text('${property.address}'),
-                  SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.apartment),
-                      Text('${property.roomNumber}'),
-                      SizedBox(width: 6),
-                      Icon(Icons.king_bed),
-                      Text('${property.bedRoomNum}'),
-                    ],
-                  ),
-                  SizedBox(width: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.fullscreen),
-                      Text('${property.propertySize}'),
-                      SizedBox(width: 4),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TextButton(
-                        onPressed: () {}, // Add your action here
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              AppColors.primaryColor),
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              side: BorderSide(color: AppColors.primaryColor),
-                            ),
-                          ),
-                          shadowColor: MaterialStateProperty.all<Color>(
-                              Colors.black.withOpacity(0.2)),
-                          elevation: MaterialStateProperty.all<double>(3.0),
-                        ),
-                        child: Text('${property.price} BIRR'),
-                      ),
-                      SizedBox(width: 4),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: 16),
-            Image.network(
-              'http://localhost/api/${property.files.first}',
-              // Assuming the API serves images from the same base URL
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.all(4.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primaryColor.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
             ),
           ],
+          color: Colors.white, // Set the background color to white
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            widget.property.title,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4),
+                    Text('${widget.property.address}'),
+                    SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.apartment),
+                        Text('${widget.property.roomNumber}'),
+                        SizedBox(width: 6),
+                        Icon(Icons.king_bed),
+                        Text('${widget.property.bedRoomNum}'),
+                      ],
+                    ),
+                    SizedBox(width: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.fullscreen),
+                        Text('${widget.property.propertySize}'),
+                        SizedBox(width: 4),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {}, // Add your action here
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                AppColors.primaryColor),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: BorderSide(color: AppColors.primaryColor),
+                              ),
+                            ),
+                            shadowColor: MaterialStateProperty.all<Color>(
+                                Colors.black.withOpacity(0.2)),
+                            elevation: MaterialStateProperty.all<double>(3.0),
+                          ),
+                          child: Text('${widget.property.price} BIRR'),
+                        ),
+                        SizedBox(width: 4),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isFavorite = !isFavorite;
+                            });
+                            if (widget.onFavoriteTap != null) {
+                              widget.onFavoriteTap!();
+                            }
+                          },
+                          icon: Icon(
+                            isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_outline,
+                            color: AppColors.secondaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 16),
+              Image.network(
+                'http://localhost/api/${widget.property.files.first}',
+                // Assuming the API serves images from the same base URL
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+class FavoriteListScreen extends StatefulWidget {
+  @override
+  _FavoriteListScreenState createState() => _FavoriteListScreenState();
 }
