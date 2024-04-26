@@ -13,6 +13,7 @@ class LoginScreen extends StatelessWidget {
 
   Future<void> loginUser(BuildContext context) async {
     // Get user input
+    print('pressed');
     String phoneNumber = phoneController.text.trim();
     String pin = pinController.text.trim();
 
