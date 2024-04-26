@@ -6,6 +6,8 @@ import 'package:owner_app/constants/url.dart';
 import 'package:owner_app/screens/authentication/register.dart';
 import 'package:owner_app/screens/owner/homeScreen.dart';
 import 'package:owner_app/themes/colors.dart';
+import 'package:owner_app/widgets/bottom_bar_owner.dart';
+import 'package:owner_app/widgets/bottom_bar_renter.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController phoneController = TextEditingController();
@@ -37,11 +39,20 @@ class LoginScreen extends StatelessWidget {
       Map<String, dynamic> responseBody = jsonDecode(response.body);
       String role = responseBody['user']['role'];
       print(role);
+      // Navigator.pushNamed(context, "/owner_home");
+      if (role == "renter") {
 
-      if (role == 'renter') {
-        Navigator.pushReplacementNamed(context, '/renter_home');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => RenterBottomNavigationBar()),
+          (Route<dynamic> route) => false,
+        );
       } else {
-        Navigator.pushReplacementNamed(context, '/owner_home');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => OwnerBottomNavigationBar()),
+          (Route<dynamic> route) => false,
+        );
       }
     }
      else {
@@ -67,9 +78,7 @@ class LoginScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          
           child: Column(
-            
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SizedBox(height: 100),

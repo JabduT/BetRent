@@ -74,7 +74,9 @@ class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
           'Authorization': 'Bearer $token', // Include token in the header
         },
       );
-      print( '${AppConstants.APIURL}/properties?userId=${userId}${_buildQueryParams()}',);
+      print(
+        '${AppConstants.APIURL}/properties?userId=${userId}${_buildQueryParams()}',
+      );
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body);
@@ -387,8 +389,7 @@ class _PropertyListItemState extends State<PropertyListItem> {
               ),
               SizedBox(width: 16),
               Image.network(
-                'http://localhost/api/${widget.property.files.first}',
-                // Assuming the API serves images from the same base URL
+                '${AppConstants.BASEURL}/${widget.property.files[0]}',
                 width: 100,
                 height: 100,
                 fit: BoxFit.cover,

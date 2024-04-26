@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
             if (role == 'renter') {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
-                title: 'Flutter Demo',
+                title: 'Bet-Rent app',
                 theme: ThemeData(
                   primarySwatch: Colors.red,
                 ),
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
             } else {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
-                title: 'Flutter Demo',
+                title: 'Bet Rent app',
                 theme: ThemeData(
                   primarySwatch: Colors.red,
                 ),
