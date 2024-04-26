@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:owner_app/themes/colors.dart';
 import 'package:owner_app/widgets/bottom_bar_owner.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' show MediaType;
+import 'package:dio/dio.dart';
+
+
+
 
 class AddHouseRentScreen extends StatefulWidget {
   @override
@@ -70,49 +73,50 @@ Future<void> _submitHouse() async {
     return;
   }
 
-  // Create a multipart request to send form data and image file
-  var request = http.MultipartRequest(
-    'POST',
-    Uri.parse('${AppConstants.APIURL}/houses'),
-  );
+  // Create FormData with extra fields and image file
+  var formData = FormData.fromMap({
+    'title': _titleController.text,
+    'userId': userId,
+    'type': _selectedType,
+    'description': _descriptionController.text,
+    'price': _price,
+    'priceType': _selectedPriceType,
+    'numOfRooms': _roomController.text,
+    'exactLocation': _exactLocationController.text,
+    'propertySize': _propertySize,
+    '<SOME-EXTRA-FIELD>': 'username-forexample', // Your extra field
+    'photo': await MultipartFile.fromFile(
+      _imageFiles[0].path, // Assuming you're uploading the first image only
+      filename: 'photo.jpg', // Change filename if needed
+      contentType: MediaType('image', 'jpeg'), // Specify content type
+    ),
+  });
 
-  // Add form fields to the request
-  request.fields['title'] = _titleController.text;
-  request.fields['userId'] = userId;
-  request.fields['type'] = _selectedType;
-  request.fields['description'] = _descriptionController.text;
-  request.fields['price'] = _price;
-  request.fields['priceType'] = _selectedPriceType;
-  request.fields['numOfRooms'] = _roomController.text;
-  request.fields['exactLocation'] = _exactLocationController.text;
-  request.fields['propertySize'] = _propertySize;
-
- // Add image file(s) to the request
-  for (int i = 0; i < _imageFiles.length; i++) {
-    var file = _imageFiles[i];
-    request.files.add(
-      http.MultipartFile.fromBytes(
-        'image$i', // Form field name expected by the server
-        await file.readAsBytes(),
-        filename: 'image$i.jpg',
-        //contentType:http.MediaType('image/jpeg') // Specify content type as a string
+  // Create Dio instance and send the request
+  var dio = Dio();
+  try {
+    var response = await dio.post(
+      '${AppConstants.APIURL}/houses',
+      data: formData,
+      options: Options(
+        headers: {
+          'Content-Type': 'multipart/form-data', // Specify content type for multipart form data
+        },
       ),
     );
 
-  }
-
-  // Send the multipart request and handle the response
-  var response = await request.send();
-  if (response.statusCode == 200) {
-    // Handle successful submission
-    print('House submitted successfully');
-  } else {
-    // Handle error
-    print('Error submitting house: ${response.reasonPhrase}');
+    // Handle response
+    if (response.statusCode == 200) {
+      // Handle successful submission
+      print('House submitted successfully');
+    } else {
+      // Handle error
+      print('Error submitting house: ${response.data}');
+    }
+  } catch (e) {
+    print('Error submitting house: $e');
   }
 }
-
-
   @override
   void initState() {
     super.initState();
