@@ -75,10 +75,8 @@ Future<void> _submitHouse() async {
 
   // Create the URL for the POST request
   final url = Uri.parse('${AppConstants.APIURL}/houses');
-
   // Create a MultipartRequest
   final request = http.MultipartRequest('POST', url);
-
   // Add form fields to the request
   request.fields['title'] = _titleController.text;
   request.fields['userId'] = userId;
@@ -89,8 +87,6 @@ Future<void> _submitHouse() async {
   request.fields['numOfRooms'] = _roomController.text;
   request.fields['exactLocation'] = _exactLocationController.text;
   request.fields['propertySize'] = _propertySize;
-  // request.fields['upload_preset'] = '<preset_name>'; // Add your preset name
-
   // Add the image file(s) to the request
   for (int i = 0; i < _imageFiles.length; i++) {
     var file = _imageFiles[i];
