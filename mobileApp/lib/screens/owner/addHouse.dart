@@ -97,7 +97,7 @@ Future<void> _submitHouse() async {
         'image$i', // Form field name expected by the server
         await file.readAsBytes(),
         filename: 'image$i.jpg',
-        contentType: MediaType('image', 'jpeg'), // Specify the content type
+        // contentType: MediaQueryData('image', 'jpeg'), // Specify the content type
       ),
     );
   }

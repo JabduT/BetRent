@@ -52,8 +52,7 @@ class LoginScreen extends StatelessWidget {
           (Route<dynamic> route) => false,
         );
       }
-    }
-     else {
+    } else {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -196,11 +195,11 @@ class LoginScreen extends StatelessWidget {
               ),
               SizedBox(height: 40),
               GestureDetector(
-                onTap: () {
-                  Navigator.pushAndRemoveUntil(
+                onTap: ()  {
+                  Navigator.pop(context);
+                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => SignUpScreen()),
-                    (Route<dynamic> route) => false,
                   );
                 },
                 child: Container(
