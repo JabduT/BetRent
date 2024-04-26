@@ -15,7 +15,6 @@ class LoginScreen extends StatelessWidget {
 
   Future<void> loginUser(BuildContext context) async {
     // Get user input
-    print('pressed');
     String phoneNumber = phoneController.text.trim();
     String pin = pinController.text.trim();
 
@@ -41,7 +40,6 @@ class LoginScreen extends StatelessWidget {
       print(role);
       // Navigator.pushNamed(context, "/owner_home");
       if (role == "renter") {
-
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => RenterBottomNavigationBar()),
@@ -54,8 +52,7 @@ class LoginScreen extends StatelessWidget {
           (Route<dynamic> route) => false,
         );
       }
-    }
-     else {
+    } else {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -198,8 +195,12 @@ class LoginScreen extends StatelessWidget {
               ),
               SizedBox(height: 40),
               GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/register');
+                onTap: ()  {
+                  Navigator.pop(context);
+                   Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUpScreen()),
+                  );
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 16.0),
