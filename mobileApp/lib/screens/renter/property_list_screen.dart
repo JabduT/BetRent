@@ -428,7 +428,7 @@ class _PropertyListItemState extends State<PropertyListItem> {
               ),
               SizedBox(width: 16),
               Image.network(
-                'http://localhost/api/${widget.property.files.first}',
+                '${AppConstants.BASEURL}/${widget.property.files[0]}',
                 // Assuming the API serves images from the same base URL
                 width: 100,
                 height: 100,
