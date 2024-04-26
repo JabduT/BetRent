@@ -73,50 +73,52 @@ Future<void> _submitHouse() async {
     return;
   }
 
-  // Create FormData with extra fields and image file
-  var formData = FormData.fromMap({
-    'title': _titleController.text,
-    'userId': userId,
-    'type': _selectedType,
-    'description': _descriptionController.text,
-    'price': _price,
-    'priceType': _selectedPriceType,
-    'numOfRooms': _roomController.text,
-    'exactLocation': _exactLocationController.text,
-    'propertySize': _propertySize,
-    '<SOME-EXTRA-FIELD>': 'username-forexample', // Your extra field
-    'photo': await MultipartFile.fromFile(
-      _imageFiles[0].path, // Assuming you're uploading the first image only
-      filename: 'photo.jpg', // Change filename if needed
-      contentType: MediaType('image', 'jpeg'), // Specify content type
-    ),
-  });
+  // Create the URL for the POST request
+  final url = Uri.parse('${AppConstants.APIURL}/houses');
 
-  // Create Dio instance and send the request
-  var dio = Dio();
+  // Create a MultipartRequest
+  final request = http.MultipartRequest('POST', url);
+
+  // Add form fields to the request
+  request.fields['title'] = _titleController.text;
+  request.fields['userId'] = userId;
+  request.fields['type'] = _selectedType;
+  request.fields['description'] = _descriptionController.text;
+  request.fields['price'] = _price;
+  request.fields['priceType'] = _selectedPriceType;
+  request.fields['numOfRooms'] = _roomController.text;
+  request.fields['exactLocation'] = _exactLocationController.text;
+  request.fields['propertySize'] = _propertySize;
+  request.fields['upload_preset'] = '<preset_name>'; // Add your preset name
+
+  // Add the image file(s) to the request
+  for (int i = 0; i < _imageFiles.length; i++) {
+    var file = _imageFiles[i];
+    request.files.add(await http.MultipartFile.fromPath(
+      'file$i', // Form field name expected by the server
+      file.path,
+      filename: 'image$i.jpg',
+    ));
+  }
+
   try {
-    var response = await dio.post(
-      '${AppConstants.APIURL}/houses',
-      data: formData,
-      options: Options(
-        headers: {
-          'Content-Type': 'multipart/form-data', // Specify content type for multipart form data
-        },
-      ),
-    );
+    // Send the request and get the response
+    final response = await request.send();
 
-    // Handle response
+    // Check the response status
     if (response.statusCode == 200) {
       // Handle successful submission
       print('House submitted successfully');
     } else {
       // Handle error
-      print('Error submitting house: ${response.data}');
+      print('Error submitting house: ${response.reasonPhrase}');
     }
   } catch (e) {
+    // Handle exceptions
     print('Error submitting house: $e');
   }
 }
+
   @override
   void initState() {
     super.initState();
