@@ -41,15 +41,15 @@ const propertySchema = new mongoose.Schema(
       maxlength: 2000,
     },
     propertySize: { type: Number },
-    numOfRooms: { type: Number },
-    numOfBathrooms: { type: Number },
-    exactLocation: {
+    roomNumber: { type: Number },
+    bedRoomNum: { type: Number },
+    address: {
       type: String,
       required: true,
       minlength: 10,
       maxlength: 1000,
     },
-    imageFiles: {
+    files: {
       type: [String],
       required: true,
     },
@@ -91,15 +91,15 @@ function validateProperty(property) {
       )
       .default("House"),
     description: Joi.string().min(10).max(2000).required(),
-    numOfRoom: Joi.number().integer().min(0),
-    numOfBathroom: Joi.number().integer().min(0),
+    roomNumber: Joi.number().integer().min(0),
+    bedRoomNum: Joi.number().integer().min(0),
     address: Joi.string().min(10).max(1000),
     userId: Joi.string().required(),
     files: Joi.array().items(Joi.string()),
     price: Joi.number().min(0),
     priceType: Joi.string().valid("Per Day", "Per Month", "Per Year"),
     propertySize: Joi.number().min(0),
-    imageFiles: Joi.array().items(Joi.string()),
+  //  imageFiles: Joi.array().items(Joi.string()),
   });
   return schema.validate(property);
 }
