@@ -45,7 +45,6 @@ class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
   String _propertySize = ''; // Variable to hold property size
   int _currentPage = 0;
   String userId = '';
-  // Method to pick an image using image_picker
 // Method to pick an image using image_picker
 Future<void> _pickImage() async {
   final pickedImage =
@@ -88,8 +87,7 @@ Future<void> _submitHouse() async {
   request.fields['exactLocation'] = _exactLocationController.text;
   request.fields['propertySize'] = _propertySize;
 
-  // Add image file(s) to the request
-  // Add image file(s) to the request
+ // Add image file(s) to the request
   for (int i = 0; i < _imageFiles.length; i++) {
     var file = _imageFiles[i];
     request.files.add(
@@ -97,9 +95,10 @@ Future<void> _submitHouse() async {
         'image$i', // Form field name expected by the server
         await file.readAsBytes(),
         filename: 'image$i.jpg',
-        // contentType: MediaQueryData('image', 'jpeg'), // Specify the content type
+        //contentType:http.MediaType('image/jpeg') // Specify content type as a string
       ),
     );
+
   }
 
   // Send the multipart request and handle the response
