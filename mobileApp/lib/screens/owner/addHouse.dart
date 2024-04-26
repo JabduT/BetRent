@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:owner_app/themes/colors.dart';
 import 'package:owner_app/widgets/bottom_bar_owner.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' show MediaType;
+import 'package:dio/dio.dart';
+
+
+
 
 class AddHouseRentScreen extends StatefulWidget {
   @override
@@ -70,11 +73,11 @@ Future<void> _submitHouse() async {
     return;
   }
 
-  // Create a multipart request to send form data and image file
-  var request = http.MultipartRequest(
-    'POST',
-    Uri.parse('${AppConstants.APIURL}/houses'),
-  );
+  // Create the URL for the POST request
+  final url = Uri.parse('${AppConstants.APIURL}/houses');
+
+  // Create a MultipartRequest
+  final request = http.MultipartRequest('POST', url);
 
   // Add form fields to the request
   request.fields['title'] = _titleController.text;
@@ -86,32 +89,35 @@ Future<void> _submitHouse() async {
   request.fields['numOfRooms'] = _roomController.text;
   request.fields['exactLocation'] = _exactLocationController.text;
   request.fields['propertySize'] = _propertySize;
+  request.fields['upload_preset'] = '<preset_name>'; // Add your preset name
 
- // Add image file(s) to the request
+  // Add the image file(s) to the request
   for (int i = 0; i < _imageFiles.length; i++) {
     var file = _imageFiles[i];
-    request.files.add(
-      http.MultipartFile.fromBytes(
-        'image$i', // Form field name expected by the server
-        await file.readAsBytes(),
-        filename: 'image$i.jpg',
-        //contentType:http.MediaType('image/jpeg') // Specify content type as a string
-      ),
-    );
-
+    request.files.add(await http.MultipartFile.fromPath(
+      'file$i', // Form field name expected by the server
+      file.path,
+      filename: 'image$i.jpg',
+    ));
   }
 
-  // Send the multipart request and handle the response
-  var response = await request.send();
-  if (response.statusCode == 200) {
-    // Handle successful submission
-    print('House submitted successfully');
-  } else {
-    // Handle error
-    print('Error submitting house: ${response.reasonPhrase}');
+  try {
+    // Send the request and get the response
+    final response = await request.send();
+
+    // Check the response status
+    if (response.statusCode == 200) {
+      // Handle successful submission
+      print('House submitted successfully');
+    } else {
+      // Handle error
+      print('Error submitting house: ${response.reasonPhrase}');
+    }
+  } catch (e) {
+    // Handle exceptions
+    print('Error submitting house: $e');
   }
 }
-
 
   @override
   void initState() {
