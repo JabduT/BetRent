@@ -40,7 +40,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                 child: CarouselSlider(
                   items: widget.property.files.map((image) {
                     return Image.network(
-                      'http://localhost/api/$image',
+                      '${AppConstants.BASEURL}/${image}',
                       width: 100,
                       height: 100,
                       fit: BoxFit.cover,
@@ -122,7 +122,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ContactDetail(userId: widget.property.owner_Id),
+                        builder: (context) =>
+                            ContactDetail(userId: widget.property.owner_Id),
                       ),
                     );
                   },
