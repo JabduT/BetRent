@@ -52,7 +52,8 @@ class LoginScreen extends StatelessWidget {
           (Route<dynamic> route) => false,
         );
       }
-    } else {
+    }
+     else {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

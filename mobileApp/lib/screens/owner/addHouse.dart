@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:owner_app/themes/colors.dart';
 import 'package:owner_app/widgets/bottom_bar_owner.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' show MediaType;
 
 class AddHouseRentScreen extends StatefulWidget {
   @override
@@ -45,63 +46,73 @@ class _AddHouseRentScreenState extends State<AddHouseRentScreen> {
   int _currentPage = 0;
   String userId = '';
   // Method to pick an image using image_picker
-  Future<void> _pickImage() async {
-    final pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _imageFiles.add(File(pickedImage
-            .path)); // Create a File object from the picked image path
-      });
-    }
+// Method to pick an image using image_picker
+Future<void> _pickImage() async {
+  final pickedImage =
+      await ImagePicker().pickImage(source: ImageSource.gallery);
+  if (pickedImage != null) {
+    setState(() {
+      _imageFiles.add(File(pickedImage.path)); // Create a File object from the picked image path
+    });
+  }
+}
+
+// Method to submit the form data including image file
+Future<void> _submitHouse() async {
+  // Validate input data
+  if (_titleController.text.isEmpty ||
+      _descriptionController.text.isEmpty ||
+      _roomController.text.isEmpty ||
+      _exactLocationController.text.isEmpty ||
+      _price.isEmpty ||
+      _propertySize.isEmpty ||
+      _imageFiles.isEmpty) {
+    print('Please fill in all required fields');
+    return;
   }
 
-  Future<void> _submitHouse() async {
-    // Validate input data
-    if (_titleController.text.isEmpty ||
-        _descriptionController.text.isEmpty ||
-        _roomController.text.isEmpty ||
-        _exactLocationController.text.isEmpty ||
-        _price.isEmpty ||
-        _propertySize.isEmpty ||
-        _imageFiles.isEmpty) {
-      print('Please fill in all required fields');
-      return;
-    }
+  // Create a multipart request to send form data and image file
+  var request = http.MultipartRequest(
+    'POST',
+    Uri.parse('${AppConstants.APIURL}/houses'),
+  );
 
-    // Prepare the data to be sent in the POST request
-    Map<String, dynamic> postData = {
-      'title': _titleController.text,
-      'userId': userId,
-      'type': _selectedType,
-      'description': _descriptionController.text,
-      'price': _price,
-      'priceType': _selectedPriceType,
-      'numOfRooms': _roomController.text,
-      'exactLocation': _exactLocationController.text,
-      'propertySize': _propertySize,
-      'imageFiles': _imageFiles.map((file) => file.path).toList(),
-    };
-    print(postData);
-    // Make the HTTP POST request
-    var response = await http.post(
-      Uri.parse('${AppConstants.APIURL}/houses'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(postData), // Convert postData to JSON format
+  // Add form fields to the request
+  request.fields['title'] = _titleController.text;
+  request.fields['userId'] = userId;
+  request.fields['type'] = _selectedType;
+  request.fields['description'] = _descriptionController.text;
+  request.fields['price'] = _price;
+  request.fields['priceType'] = _selectedPriceType;
+  request.fields['numOfRooms'] = _roomController.text;
+  request.fields['exactLocation'] = _exactLocationController.text;
+  request.fields['propertySize'] = _propertySize;
+
+  // Add image file(s) to the request
+  // Add image file(s) to the request
+  for (int i = 0; i < _imageFiles.length; i++) {
+    var file = _imageFiles[i];
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'image$i', // Form field name expected by the server
+        await file.readAsBytes(),
+        filename: 'image$i.jpg',
+        contentType: MediaType('image', 'jpeg'), // Specify the content type
+      ),
     );
-
-    // Check the response status
-    if (response.statusCode == 200) {
-      // Handle successful submission
-      // You can show a success message or navigate to a success page
-      print('House submitted successfully');
-    } else {
-      // Handle error
-      print('Error submitting house: ${response.body}');
-    }
   }
+
+  // Send the multipart request and handle the response
+  var response = await request.send();
+  if (response.statusCode == 200) {
+    // Handle successful submission
+    print('House submitted successfully');
+  } else {
+    // Handle error
+    print('Error submitting house: ${response.reasonPhrase}');
+  }
+}
+
 
   @override
   void initState() {
