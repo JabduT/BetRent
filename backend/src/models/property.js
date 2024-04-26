@@ -90,10 +90,10 @@ function validateProperty(property) {
         "Townhouse / Terrace"
       )
       .default("House"),
-    description: Joi.string().min(10).max(2000).required(),
+    description: Joi.string().min(5).max(2000).required(),
     roomNumber: Joi.number().integer().min(0),
     bedRoomNum: Joi.number().integer().min(0),
-    address: Joi.string().min(10).max(1000),
+    address: Joi.string().min(5).max(1000),
     userId: Joi.string().required(),
     files: Joi.array().items(Joi.string()),
     price: Joi.number().min(0),

@@ -41,8 +41,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   items: widget.property.files.map((image) {
                     return Image.network(
                       '${AppConstants.BASEURL}/${image}',
-                      width: 100,
-                      height: 100,
+                   
                       fit: BoxFit.cover,
                     );
                   }).toList(),

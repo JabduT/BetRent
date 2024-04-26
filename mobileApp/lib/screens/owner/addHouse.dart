@@ -89,7 +89,7 @@ Future<void> _submitHouse() async {
   request.fields['numOfRooms'] = _roomController.text;
   request.fields['exactLocation'] = _exactLocationController.text;
   request.fields['propertySize'] = _propertySize;
-  request.fields['upload_preset'] = '<preset_name>'; // Add your preset name
+  // request.fields['upload_preset'] = '<preset_name>'; // Add your preset name
 
   // Add the image file(s) to the request
   for (int i = 0; i < _imageFiles.length; i++) {
@@ -111,11 +111,11 @@ Future<void> _submitHouse() async {
       print('House submitted successfully');
     } else {
       // Handle error
-      print('Error submitting house: ${response.reasonPhrase}');
+      print('Error submitting house: ${response}');
     }
   } catch (e) {
     // Handle exceptions
-    print('Error submitting house: $e');
+    print('Error submitting house ij: $e');
   }
 }
 
