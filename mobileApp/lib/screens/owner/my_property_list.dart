@@ -63,44 +63,49 @@ class _OwnerPropertyListScreenState extends State<OwnerPropertyListScreen> {
       isLoading = true;
     });
     try {
-      final storage = FlutterSecureStorage();
-      final token = await storage.read(key: 'token');
+      final storag = FlutterSecureStorage();
+      final String? userData = await storag.read(key: 'user');
 
-      final response = await http.get(
-        Uri.parse(
-          '${AppConstants.APIURL}/properties?userId=${userId}${_buildQueryParams()}',
-        ),
-        headers: <String, String>{
-          'Authorization': 'Bearer $token', // Include token in the header
-        },
-      );
-      print(
-        '${AppConstants.APIURL}/properties?userId=${userId}${_buildQueryParams()}',
-      );
+      if (userData != null) {
+        final user = jsonDecode(userData);
+        userId = user['_id'];
 
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          properties = responseData
-              .map((data) => Property(
-                  id: data['_id'],
-                  owner_Id: data['userId'],
-                  description: data['description'],
-                  title: data['title'],
-                  type: data['type'],
-                  roomNumber: data['roomNumber'],
-                  bedRoomNum: data['bedRoomNum'],
-                  propertySize: data['propertySize'],
-                  address: data['address'],
-                  files: List<String>.from(data['files']),
-                  price: data['price'],
-                  favorite: data['favorite']))
-              .toList();
-          errorMessage =
-              ''; // Clear error message if data is loaded successfully
-        });
-      } else {
-        throw Exception('Failed to load properties: ${response.statusCode}');
+        final storage = FlutterSecureStorage();
+        final token = await storage.read(key: 'token');
+
+        final response = await http.get(
+          Uri.parse(
+            '${AppConstants.APIURL}/properties?userId=${user['_id']}${_buildQueryParams()}',
+          ),
+          headers: <String, String>{
+            'Authorization': 'Bearer $token', // Include token in the header
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final List<dynamic> responseData = jsonDecode(response.body);
+          setState(() {
+            properties = responseData
+                .map((data) => Property(
+                    id: data['_id'],
+                    owner_Id: data['userId'],
+                    description: data['description'],
+                    title: data['title'],
+                    type: data['type'],
+                    roomNumber: data['roomNumber'],
+                    bedRoomNum: data['bedRoomNum'],
+                    propertySize: data['propertySize'],
+                    address: data['address'],
+                    files: List<String>.from(data['files']),
+                    price: data['price'],
+                    favorite: data['favorite']))
+                .toList();
+            errorMessage =
+                ''; // Clear error message if data is loaded successfully
+          });
+        } else {
+          throw Exception('Failed to load properties: ${response.statusCode}');
+        }
       }
     } catch (e) {
       setState(() {

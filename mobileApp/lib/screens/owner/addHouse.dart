@@ -107,11 +107,11 @@ Future<void> _submitHouse() async {
       print('House submitted successfully');
     } else {
       // Handle error
-      print('Error submitting house: ${response.reasonPhrase}');
+      print('Error submitting house: ${response}');
     }
   } catch (e) {
     // Handle exceptions
-    print('Error submitting house: $e');
+    print('Error submitting house ij: $e');
   }
 }
 

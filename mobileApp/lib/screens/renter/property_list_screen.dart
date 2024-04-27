@@ -223,11 +223,10 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
                         },
                       ),
                     ),
-                    if (!isSearching)
-                      IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: search,
-                      ),
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: search,
+                    ),
                   ],
                 ),
               ),
