@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:owner_app/themes/colors.dart';
 
 class IntroductionScreen extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
             },
             child: Text(
               'Skip',
-              style: TextStyle(color: Colors.),
+              style: TextStyle(fontSize: 20.0,color:AppColors.primaryColor ),
             ),
           ),
         ],
