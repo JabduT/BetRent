@@ -11,7 +11,7 @@ import 'package:owner_app/screens/owner/addHouse.dart';
 import 'package:owner_app/screens/common/messaging.dart';
 import 'package:owner_app/screens/authentication/login.dart';
 import 'package:owner_app/widgets/bottom_bar_renter.dart';
-
+import 'package:owner_app/screens/common/introduction.dart';
 void main() {
   runApp(MyApp());
 }
@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
                 routes: {
                   '/login': (context) => LoginScreen(),
                   '/register': (context) => SignUpScreen(),
+                  '/onwer_home':(context)=>IntroductionScreen(),
                   '/renter_home': (context) => RenterBottomNavigationBar(),
                   '/screen1': (context) => PropertyListScreen(),
                   // '/chat': (context) => ChattingScreen(),
@@ -59,7 +60,8 @@ class MyApp extends StatelessWidget {
                 routes: {
                   '/login': (context) => LoginScreen(),
                   '/register': (context) => SignUpScreen(),
-                  '/owner_home': (context) => OwnerBottomNavigationBar(),
+                  '/owner_home': (context) => IntroductionScreen(),
+                  //'/owner_home': (context) => OwnerBottomNavigationBar(),
                   '/screen1': (context) => PropertyListScreen(),
                   // '/chat': (context) => ChattingScreen(),
                   '/screen4': (context) => Screen4(), //and here
