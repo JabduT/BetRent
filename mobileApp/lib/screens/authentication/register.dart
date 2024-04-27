@@ -195,9 +195,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 labelText: 'Confirm PIN',
                 filled: true,
                 fillColor:
-                    AppColors.primaryColor.withOpacity(0.3), // 30% opacity
+                    AppColors.primaryColor.withOpacity(0.3), 
                 border: OutlineInputBorder(
-                  borderSide: BorderSide.none, // No border
+                  borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 suffixIcon: Container(

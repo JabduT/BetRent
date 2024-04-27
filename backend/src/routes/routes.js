@@ -38,7 +38,7 @@ router.delete("/users/:id", deleteUser);
 
 //property || house
 //view
-router.get("/properties",authenticate, getAllProperties);
+router.get("/properties", getAllProperties);
 router.get("/properties/:id", authenticate, getPropertyById);
 //router.get("/properties/:id", authenticate, getPropertyById);
 
