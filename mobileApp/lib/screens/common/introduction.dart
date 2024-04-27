@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:owner_app/themes/colors.dart';
-
 class IntroductionScreen extends StatefulWidget {
   @override
   _IntroductionScreenState createState() => _IntroductionScreenState();
@@ -20,30 +19,32 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
       onHorizontalDragEnd: (details) {
         if (details.primaryVelocity! > 0) {
           setState(() {
-            _currentIndex = (_currentIndex - 1).clamp(0, imagePaths.length - 1);
+            _currentIndex =
+                (_currentIndex - 1).clamp(0, imagePaths.length - 1);
           });
         } else if (details.primaryVelocity! < 0) {
           setState(() {
-            _currentIndex = (_currentIndex + 1).clamp(0, imagePaths.length - 1);
+            _currentIndex =
+                (_currentIndex + 1).clamp(0, imagePaths.length - 1);
           });
         }
       },
       child: Scaffold(
         appBar: AppBar(
           actions: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  if (_currentIndex < imagePaths.length - 1) {
-                    _currentIndex++;
-                  }
-                });
-              },
-              child: Text(
-                'Skip',
-                style: TextStyle(fontSize: 20.0, color: AppColors.primaryColor),
+            if (_currentIndex < 2)
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _currentIndex = 2; // Skip to the third screen
+                  });
+                },
+                
+                child: Text(
+                  'Skip',
+                  style: TextStyle(fontSize: 20.0, color: AppColors.primaryColor),
+                ),
               ),
-            ),
           ],
         ),
         body: Column(
@@ -56,45 +57,44 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                 fit: BoxFit.contain,
               ),
             ),
-    Padding(
-  padding: const EdgeInsets.symmetric(vertical: 20),
-  child: Container(
-    width: MediaQuery.of(context).size.width * 0.7, // Adjust the width as needed
-    child: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            _currentIndex == 0
-                ? 'Welcome\n to the BetRent app'
-                : _currentIndex == 1
-                    ? 'Easily find houses'
-                    : 'Start today',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _currentIndex == 0
+                            ? 'Welcome\n to the BetRent app'
+                            : _currentIndex == 1
+                                ? 'Easily find houses'
+                                : 'Start today',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        _currentIndex == 0
+                            ? 'Discover the best rental options in your area.'
+                            : _currentIndex == 1
+                                ? 'Browse through a wide range of properties.'
+                                : 'Get started and find your ideal home.',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            textAlign: TextAlign.center, // Text alignment within the Container
-          ),
-          SizedBox(height: 10), // Add spacing between the main text and additional statements
-          Text(
-            _currentIndex == 0
-                ? 'Discover the best rental options in your area.'
-                : _currentIndex == 1
-                    ? 'Browse through a wide range of properties.'
-                    : 'Get started and find your ideal home.',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-            ),
-            textAlign: TextAlign.center, // Text alignment within the Container
-          ),
-        ],
-      ),
-    ),
-  ),
-),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
@@ -115,19 +115,18 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                 onPressed: () {
                   // Handle start button press
                 },
-              style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primaryColor, // Add background color
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0), // Add border radius
-        ),
-        elevation: 4, // Add elevation for a 3D effect
-      ),
-child: Text(
-  'Start',
-  style: TextStyle(fontSize: 24.0, color: Colors.white),
-),
-
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  elevation: 4,
+                ),
+                child: Text(
+                  'Start',
+                  style: TextStyle(fontSize: 24.0, color: Colors.white),
+                ),
               ),
           ],
         ),
