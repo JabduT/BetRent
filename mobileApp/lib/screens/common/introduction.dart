@@ -10,8 +10,8 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
   int _currentIndex = 0;
   final List<String> imagePaths = [
     'assets/images/homeA1.jpg',
-    'assets/images/girl.jpg',
     'assets/images/location.jpg',
+    'assets/images/girl.jpg',
   ];
 
   @override
@@ -31,7 +31,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
       child: Scaffold(
         appBar: AppBar(
           actions: [
-            TextButton(
+            ElevatedButton(
               onPressed: () {
                 setState(() {
                   if (_currentIndex < imagePaths.length - 1) {
@@ -56,20 +56,45 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                 fit: BoxFit.contain,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text(
-                _currentIndex == 0
-                    ? 'Welcome to the BetRent app'
-                    : _currentIndex == 1
-                        ? 'Easily find houses'
-                        : 'Start today',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+    Padding(
+  padding: const EdgeInsets.symmetric(vertical: 20),
+  child: Container(
+    width: MediaQuery.of(context).size.width * 0.7, // Adjust the width as needed
+    child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            _currentIndex == 0
+                ? 'Welcome\n to the BetRent app'
+                : _currentIndex == 1
+                    ? 'Easily find houses'
+                    : 'Start today',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
+            textAlign: TextAlign.center, // Text alignment within the Container
+          ),
+          SizedBox(height: 10), // Add spacing between the main text and additional statements
+          Text(
+            _currentIndex == 0
+                ? 'Discover the best rental options in your area.'
+                : _currentIndex == 1
+                    ? 'Browse through a wide range of properties.'
+                    : 'Get started and find your ideal home.',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+            ),
+            textAlign: TextAlign.center, // Text alignment within the Container
+          ),
+        ],
+      ),
+    ),
+  ),
+),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
@@ -90,10 +115,19 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                 onPressed: () {
                   // Handle start button press
                 },
-                child: Text(
-                  'Start',
-                  style: TextStyle(fontSize: 24.0, color: AppColors.primaryColor),
-                ),
+              style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primaryColor, // Add background color
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0), // Add border radius
+        ),
+        elevation: 4, // Add elevation for a 3D effect
+      ),
+child: Text(
+  'Start',
+  style: TextStyle(fontSize: 24.0, color: Colors.white),
+),
+
               ),
           ],
         ),
