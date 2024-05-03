@@ -36,7 +36,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    _currentIndex = 2; // Skip to the third screen
+                    _currentIndex = 2;
                   });
                 },
                 
@@ -113,7 +113,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
             if (_currentIndex == imagePaths.length - 1)
               ElevatedButton(
                 onPressed: () {
-                  // Handle start button press
+Navigator.pushNamed(context, '/login');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryColor,
