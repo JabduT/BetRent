@@ -9,7 +9,7 @@ class Screen2 extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, '/screen4');
         },
-        child: Text('Go to Screen 4'),
+        child: Text('notification goes here'),
       ),
     );
   }

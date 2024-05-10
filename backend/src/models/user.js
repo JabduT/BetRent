@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
       },
     },
     PIN: {
-      type: String, 
+      type: String,
       required: true,
     },
     role: {
@@ -27,6 +27,8 @@ const userSchema = new mongoose.Schema(
       enum: ["renter", "landlord"],
       default: "renter",
     },
+    verified: { type: Boolean, default: false },
+    
   },
   { timestamps: true }
 );
@@ -45,10 +47,7 @@ userSchema.pre("save", async function (next) {
   }
 });
 // Define instance method to compare PIN
-userSchema.methods.checkPIN = async function (
-  candidatePIN,
-  userPIN
-) {
+userSchema.methods.checkPIN = async function (candidatePIN, userPIN) {
   return await bcrypt.compare(candidatePIN, userPIN);
 };
 const User = mongoose.model("User", userSchema);

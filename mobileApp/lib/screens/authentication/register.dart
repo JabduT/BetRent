@@ -6,6 +6,8 @@ import 'package:owner_app/constants/url.dart';
 import 'package:owner_app/screens/authentication/register.dart';
 import 'package:owner_app/screens/owner/homeScreen.dart';
 import 'package:owner_app/themes/colors.dart';
+import 'package:owner_app/widgets/bottom_bar_owner.dart';
+import 'package:owner_app/widgets/bottom_bar_renter.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -71,10 +73,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
       Map<String, dynamic> responseBody = jsonDecode(response.body);
       String role = responseBody['user']['role'];
       print(role);
-      if (role == 'renter') {
-        Navigator.pushReplacementNamed(context, '/renter_home');
-      } else
-        Navigator.pushReplacementNamed(context, '/owner_home');
+      if (role == "renter") {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => RenterBottomNavigationBar()),
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => OwnerBottomNavigationBar()),
+          (Route<dynamic> route) => false,
+        );
+      }
     } else {
       // If signUp fails, show error message
       showDialog(

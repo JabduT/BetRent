@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:owner_app/screens/chatting_screen.dart';
+import 'package:owner_app/screens/common/profile.dart';
 import 'package:owner_app/screens/owner/my_property_list.dart';
 import 'package:owner_app/screens/owner/homeScreen.dart';
 import 'package:owner_app/screens/common/notification.dart';
@@ -20,9 +22,10 @@ class _OwnerBottomNavigationBarState extends State<OwnerBottomNavigationBar> {
     HomeScreen(),
     OwnerPropertyListScreen(),
     AddHouseRentScreen(),
-    Screen2(),
+     Screen2(),
+    // ChattingScreen(),
     // Screen3(),
-    Screen4(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -53,7 +56,7 @@ class _OwnerBottomNavigationBarState extends State<OwnerBottomNavigationBar> {
               color:
                   _selectedIndex == 3 ? AppColors.secondaryColor : Colors.white,
               size: 30),
-          Icon(Icons.notifications,
+          Icon(Icons.person,
               color:
                   _selectedIndex == 4 ? AppColors.secondaryColor : Colors.white,
               size: 30),

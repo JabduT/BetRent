@@ -9,12 +9,12 @@ const { v4: uuidv4 } = require("uuid");
 const { Favorite } = require("../models/favorite");
 
 exports.createProperty = async (req, res) => {
+  console.log(req.body);
   // Validate property input
   const { error } = validateProperty(req.body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
-
   try {
     const property = new Property(req.body);
 

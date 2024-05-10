@@ -34,12 +34,16 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  dio: ^4.0.4  # Add the dio package for HTTP requests
   cupertino_icons: ^1.0.6
   curved_navigation_bar: ^1.0.3
   flutter_secure_storage: ^9.0.0
   http: ^1.2.1
   image_picker: ^1.1.0  
   carousel_slider: ^4.0.0
+  socket_io_client: ^2.0.3+1
+  url_launcher: ^6.2.6
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:

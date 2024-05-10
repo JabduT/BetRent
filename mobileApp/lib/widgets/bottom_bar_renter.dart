@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:owner_app/screens/chatting_screen.dart';
+import 'package:owner_app/screens/common/profile.dart';
 import 'package:owner_app/screens/renter/favorite_list.dart';
 import 'package:owner_app/screens/renter/property_list_screen.dart';
 import 'package:owner_app/screens/owner/homeScreen.dart';
@@ -20,8 +22,11 @@ class _RenterBottomNavigationBarState extends State<RenterBottomNavigationBar> {
   final List<Widget> _screens = [
     PropertyListScreen(),
     FavoriteListScreen(),
+    // ChattingScreen(),
+    // HomeScreen(),
     Screen2(),
-    Screen2(),
+    // Screen2(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -48,7 +53,7 @@ class _RenterBottomNavigationBarState extends State<RenterBottomNavigationBar> {
               color:
                   _selectedIndex == 2 ? AppColors.secondaryColor : Colors.white,
               size: 30),
-          Icon(Icons.notifications,
+          Icon(Icons.person,
               color:
                   _selectedIndex == 3 ? AppColors.secondaryColor : Colors.white,
               size: 30),
